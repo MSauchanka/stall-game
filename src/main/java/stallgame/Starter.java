@@ -2,7 +2,7 @@ package stallgame;
 
 public class Starter {
 
-        public static void main(String[] args) {
-                System.out.println("Hello stall!!!");
-        }
+    public static void main(String[] args) {
+        System.out.println("Hello stall!!!");
+    }
 }

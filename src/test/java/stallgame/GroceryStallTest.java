@@ -43,6 +43,31 @@ public class GroceryStallTest {
         mainChar.enterStall(groceryStall.getMainDoor());
         groceryStall.loadProducts(products);
         visitor.enterStall(groceryStall.getMainDoor());
-        groceryStall.getCashbox().registerTransaction(mainChar, products, 100, visitor, "no comments");
+        groceryStall.getCashbox(mainChar).registerTransaction(mainChar, products, 100, visitor, "no comments");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void getCashboxCashierNotNullTest() {
+        // TODO: Exception message validation
+        GroceryStall groceryStall = new GroceryStall();
+        MainChar mainChar = new MainChar();
+        Visitor visitor = new Visitor();
+
+        mainChar.enterStall(groceryStall.getMainDoor());
+        visitor.enterStall(groceryStall.getMainDoor());
+        groceryStall.getCashbox(mainChar);
+        groceryStall.getCashbox(visitor);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void getCashboxVisitorNotContainsTest() {
+        // TODO: Exception message validation
+        GroceryStall groceryStall = new GroceryStall();
+        MainChar mainChar = new MainChar();
+        Visitor visitor = new Visitor();
+
+        mainChar.enterStall(groceryStall.getMainDoor());
+        groceryStall.getCashbox(mainChar);
+        groceryStall.getCashbox(visitor);
     }
 }

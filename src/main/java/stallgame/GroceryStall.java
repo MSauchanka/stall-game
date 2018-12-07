@@ -16,10 +16,7 @@ public class GroceryStall {
     private List<Product> storage = new ArrayList<>();
     private StallDoor mainDoor = new StallDoor(this);
     private Cashbox cashbox = new Cashbox();
-
-    public boolean isVisitorInside(StallVisitor visitor) {
-        return visitors.contains(visitor);
-    }
+    private StallVisitor cashier;
 
     public StallDoor getMainDoor() {
         return mainDoor;
@@ -39,7 +36,21 @@ public class GroceryStall {
         storage.addAll(products);
     }
 
-    public Cashbox getCashbox() {
-        return cashbox;
+    public Cashbox getCashbox(StallVisitor visitor) {
+        // TODO: ask about ifs
+        if (visitors.contains(visitor)) {
+            if (null == cashier) {
+                cashier = visitor;
+                return cashbox;
+            } else if (cashier.equals(visitor)) {
+                return cashbox;
+            } else {
+                // TODO: ask about exceptions
+                throw new RuntimeException("You are not cashier to get the cashbox!");
+            }
+        } else {
+            throw new RuntimeException("You are not inside the stall to get the cashbox!");
+        }
+
     }
 }

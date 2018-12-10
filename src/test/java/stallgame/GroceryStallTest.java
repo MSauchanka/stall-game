@@ -1,7 +1,9 @@
 package stallgame;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import stallgame.product.Product;
 
 import java.util.ArrayList;
@@ -10,6 +12,9 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class GroceryStallTest {
+
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
     public void leaveByDoor() {
@@ -21,19 +26,18 @@ public class GroceryStallTest {
         Assert.assertEquals(0, groceryStall.visitors.size());
     }
 
-
-    @Test(expected = RuntimeException.class)
+    @Test
     public void leaveByDoorVisitor() {
+        expectedEx.expect(RuntimeException.class);
+        expectedEx.expectMessage("Sorry door is closed!");
+
         GroceryStall groceryStall = new GroceryStall();
         Visitor visitor = new Visitor();
         visitor.enterStall(groceryStall.getMainDoor());
-        Assert.assertEquals(0, groceryStall.visitors.size());
-        visitor.leaveStall(groceryStall.getMainDoor());
-        Assert.assertEquals(0, groceryStall.visitors.size());
     }
 
     @Test
-    public void cashboxTransactionTest() {
+    public void cashboxTransaction() {
         GroceryStall groceryStall = new GroceryStall();
         MainChar mainChar = new MainChar();
         Visitor visitor = new Visitor();
@@ -43,31 +47,22 @@ public class GroceryStallTest {
         mainChar.enterStall(groceryStall.getMainDoor());
         groceryStall.loadProducts(products);
         visitor.enterStall(groceryStall.getMainDoor());
-        groceryStall.getCashbox(mainChar).registerTransaction(mainChar, products, 100, visitor, "no comments");
+        mainChar.enterCashierPlace(groceryStall.getCashierPlace());
+        // TODO
+//        mainChar.pickUpCashbox(groceryStall.getCashierPlace().getCashbox());
+//        mainChar.operateCashbox().registerTransaction(mainChar, products, 100, visitor, "no comments");
     }
 
-    @Test(expected = RuntimeException.class)
-    public void getCashboxCashierNotNullTest() {
-        // TODO: Exception message validation
+
+    @Test
+    public void toCashierPlaceOutside() {
+        expectedEx.expect(RuntimeException.class);
+        expectedEx.expectMessage("Enter the stall to take cashier place!");
+
         GroceryStall groceryStall = new GroceryStall();
         MainChar mainChar = new MainChar();
-        Visitor visitor = new Visitor();
-
-        mainChar.enterStall(groceryStall.getMainDoor());
-        visitor.enterStall(groceryStall.getMainDoor());
-        groceryStall.getCashbox(mainChar);
-        groceryStall.getCashbox(visitor);
+        mainChar.enterCashierPlace(groceryStall.getCashierPlace());
     }
 
-    @Test(expected = RuntimeException.class)
-    public void getCashboxVisitorNotContainsTest() {
-        // TODO: Exception message validation
-        GroceryStall groceryStall = new GroceryStall();
-        MainChar mainChar = new MainChar();
-        Visitor visitor = new Visitor();
 
-        mainChar.enterStall(groceryStall.getMainDoor());
-        groceryStall.getCashbox(mainChar);
-        groceryStall.getCashbox(visitor);
-    }
 }

@@ -1,7 +1,7 @@
 package stallgame;
 
 import stallgame.product.Product;
-import stallgame.stall.cashbox.Cashbox;
+import stallgame.stall.CashierPlace;
 import stallgame.stall.StallDoor;
 
 import java.util.ArrayList;
@@ -15,11 +15,14 @@ public class GroceryStall {
     public final HashSet<StallVisitor> visitors = new HashSet<>(MAX_STALL_VISITORS, 1.0f);
     private List<Product> storage = new ArrayList<>();
     private StallDoor mainDoor = new StallDoor(this);
-    private Cashbox cashbox = new Cashbox();
-    private StallVisitor cashier;
+    private CashierPlace cashierPlace = new CashierPlace(this);
 
     public StallDoor getMainDoor() {
         return mainDoor;
+    }
+
+    public CashierPlace getCashierPlace() {
+        return cashierPlace;
     }
 
     public void addVisitor(StallVisitor visitor) {
@@ -36,21 +39,15 @@ public class GroceryStall {
         storage.addAll(products);
     }
 
-    public Cashbox getCashbox(StallVisitor visitor) {
-        // TODO: ask about ifs
-        if (visitors.contains(visitor)) {
-            if (null == cashier) {
-                cashier = visitor;
-                return cashbox;
-            } else if (cashier.equals(visitor)) {
-                return cashbox;
-            } else {
-                // TODO: ask about exceptions
-                throw new RuntimeException("You are not cashier to get the cashbox!");
-            }
+    public void addVisitorToCashierPlace(MainChar seller) {
+        if (visitors.contains(seller)) {
+            cashierPlace.enter(seller);
         } else {
-            throw new RuntimeException("You are not inside the stall to get the cashbox!");
+            throw new RuntimeException("You are outside the stall!");
         }
+    }
 
+    public List<Product> getStorage() {
+        return storage;
     }
 }

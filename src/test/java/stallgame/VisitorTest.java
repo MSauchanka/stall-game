@@ -1,12 +1,17 @@
 package stallgame;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import stallgame.product.Product;
 
 import static java.util.Collections.singletonList;
 
 public class VisitorTest {
+
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
     public void countMoney() {
@@ -17,12 +22,15 @@ public class VisitorTest {
     @Test
     public void pay() {
         Visitor visitor = new Visitor();
-        visitor.pay(5);
-        Assert.assertEquals(Visitor.VISITOR_ON_SPAWN_MONEY_AMOUNT - 5, visitor.countMoney());
+        Assert.assertEquals(3, visitor.pay(3));
+        Assert.assertEquals(7, visitor.countMoney());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void payNegative() {
+        expectedEx.expect(RuntimeException.class);
+        expectedEx.expectMessage("Not enough money to pay!");
+
         Visitor visitor = new Visitor();
         visitor.pay(Visitor.VISITOR_ON_SPAWN_MONEY_AMOUNT + 1);
     }

@@ -1,5 +1,6 @@
 package stallgame;
 
+import stallgame.character.NonPlayableCharacter;
 import stallgame.product.Product;
 import stallgame.stall.CashierPlace;
 import stallgame.stall.cashbox.Cashbox;
@@ -43,7 +44,7 @@ public class Visitor extends StallVisitor {
         // validate visitor place
         if (null != cashierPlace.observe()) {
             if (cashierPlace.isProductsAvailable()) {
-                MainChar seller = cashierPlace.observe();
+                NonPlayableCharacter seller = cashierPlace.observe();
                 int productsPrice = products.stream().mapToInt(value -> value.price).sum();
                 if (productsPrice <= countMoney()) {
                     try {

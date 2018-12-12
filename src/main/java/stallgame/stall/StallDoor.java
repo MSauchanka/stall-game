@@ -1,8 +1,9 @@
 package stallgame.stall;
 
 import stallgame.GroceryStall;
-import stallgame.MainChar;
+import stallgame.Role;
 import stallgame.StallVisitor;
+import stallgame.character.NonPlayableCharacter;
 
 public class StallDoor {
 
@@ -13,11 +14,11 @@ public class StallDoor {
         this.groceryStall = groceryStall;
     }
 
-    public void enter(StallVisitor visitor) {
+    public void enter(NonPlayableCharacter visitor) {
         if (!isLocked) {
             groceryStall.addVisitor(visitor);
         } else {
-            if (visitor instanceof MainChar) {
+            if (Role.SELLER.equals(visitor.getRole())) {
                 isLocked = false;
                 enter(visitor);
             } else {
@@ -26,11 +27,11 @@ public class StallDoor {
         }
     }
 
-    public void leave(StallVisitor visitor) {
+    public void leave(NonPlayableCharacter visitor) {
         if (!isLocked) {
             groceryStall.removeVisitor(visitor);
         } else {
-            if (visitor instanceof MainChar) {
+            if (Role.SELLER.equals(visitor.getRole())) {
                 isLocked = false;
                 leave(visitor);
             } else {

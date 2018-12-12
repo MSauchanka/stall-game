@@ -1,7 +1,7 @@
 package stallgame.stall;
 
 import stallgame.GroceryStall;
-import stallgame.MainChar;
+import stallgame.character.NonPlayableCharacter;
 import stallgame.product.Product;
 import stallgame.stall.cashbox.Cashbox;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CashierPlace {
 
-    private MainChar seller;
+    private NonPlayableCharacter seller;
     private Cashbox cashbox = new Cashbox(this);
     private GroceryStall groceryStall;
 
@@ -17,7 +17,7 @@ public class CashierPlace {
         this.groceryStall = groceryStall;
     }
 
-    public void enter(MainChar seller) {
+    public void enter(NonPlayableCharacter seller) {
         if (null == this.seller) {
             this.seller = seller;
         } else {
@@ -31,7 +31,7 @@ public class CashierPlace {
         seller = null;
     }
 
-    public MainChar observe() {
+    public NonPlayableCharacter observe() {
         return seller;
     }
 

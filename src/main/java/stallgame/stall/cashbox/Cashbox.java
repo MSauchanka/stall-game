@@ -1,7 +1,7 @@
 package stallgame.stall.cashbox;
 
-import stallgame.MainChar;
 import stallgame.Visitor;
+import stallgame.character.NonPlayableCharacter;
 import stallgame.product.Product;
 import stallgame.stall.CashierPlace;
 
@@ -33,7 +33,7 @@ public class Cashbox {
         money -= count;
         return count;
     }
-    public void registerTransaction(MainChar mainChar, List<Product> products, int price, Visitor buyer, String comment) {
+    public void registerTransaction(NonPlayableCharacter mainChar, List<Product> products, int price, Visitor buyer, String comment) {
         if (cashierPlace.getStorage().size() >= products.size()) {
             buyer.pay(price);
             money += price;

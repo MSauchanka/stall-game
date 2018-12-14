@@ -1,0 +1,64 @@
+<project name="Stall game">
+
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.5</version>
+    </skin>
+
+    <publishDate position="right"/>
+
+    <body>
+        <head>
+            <![CDATA[
+            <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+            <link href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway:100&amp;subset=cyrillic" rel="stylesheet" />
+            <script type="text/javascript">
+                $(document).ready(function () {
+                $(".source").addClass("prettyprint language-java");
+                prettyPrint();
+                $(".sidebar-nav").removeClass("well");
+                });
+            </script>
+
+            ]]>
+        </head>
+
+        <menu name="About">
+            <item name="The Game" href="/index.html"/>
+        </menu>
+
+
+        <!--<menu name="">-->
+            <!--<item name="About" href="/index.html"/>-->
+        <!--</menu>-->
+        <!--<menu name="User Documentation">-->
+            <!--<item name="Usage Overview" href="/usage-overview.html"/>-->
+            <!--<item name="Driver API Basics" href="/driver-api-basics.html"/>-->
+            <!--<item name="Session" href="/session.html"/>-->
+            <!--<item name="Global Nav" href="/global-nav.html"/>-->
+            <!--<item name="Rest Client" href="/rest-client.html"/>-->
+
+            <!--<item name="Assets Page" href="/assets-page.html"/>-->
+
+            <!--<item name="Patterns" href="/patterns.html" collapse="true">-->
+                <!--<item name="Collection Page" href="/patterns/collection-page.html"/>-->
+                <!--<item name="Picker" href="/patterns/picker.html"/>-->
+                <!--<item name="Dialog" href="/patterns/dialog.html"/>-->
+                <!--<item name="Wizard" href="/patterns/wizard.html"/>-->
+            <!--</item>-->
+
+            <!--<item name="Conventions" href="/conventions.html"/>-->
+
+        <!--</menu>-->
+        <!--<menu name="Developer Guide">-->
+            <!--<item name="Contributing" href="/contributing.html"/>-->
+        <!--</menu>-->
+
+        <footer>
+
+        </footer>
+
+    </body>
+
+</project>

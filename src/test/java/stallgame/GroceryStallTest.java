@@ -34,7 +34,7 @@ public class GroceryStallTest {
         expectedEx.expectMessage("Sorry door is closed!");
 
         GroceryStall groceryStall = new GroceryStall();
-        Visitor visitor = new Visitor();
+        NonPlayableCharacter visitor = new NonPlayableCharacter();
         visitor.enterStall(groceryStall.getMainDoor());
     }
 
@@ -44,7 +44,7 @@ public class GroceryStallTest {
         NonPlayableCharacter npc = new NonPlayableCharacter();
         npc.setRole(Role.SELLER);
         PlayableCharacter mainChar = new PlayableCharacter(npc);
-        Visitor visitor = new Visitor();
+        NonPlayableCharacter visitor = new NonPlayableCharacter();
         List<Product> products = new ArrayList<>();
         products.add(new Product());
 
@@ -65,7 +65,6 @@ public class GroceryStallTest {
 
         GroceryStall groceryStall = new GroceryStall();
         NonPlayableCharacter npc = new NonPlayableCharacter();
-        npc.setRole(Role.SELLER);
         PlayableCharacter mainChar = new PlayableCharacter(npc);
         mainChar.npc.enterCashierPlace(groceryStall.getCashierPlace());
     }

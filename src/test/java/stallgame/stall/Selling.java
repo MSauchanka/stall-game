@@ -4,13 +4,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import stallgame.GroceryStall;
 import stallgame.Role;
-import stallgame.Visitor;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
 import stallgame.product.Product;
 
 import java.util.Collections;
 import java.util.List;
+
+import static stallgame.character.NonPlayableCharacter.VISITOR_ON_SPAWN_MONEY_AMOUNT;
 
 public class Selling {
 
@@ -20,7 +21,7 @@ public class Selling {
         NonPlayableCharacter npc = new NonPlayableCharacter();
         npc.setRole(Role.SELLER);
         PlayableCharacter mainChar = new PlayableCharacter(npc);
-        Visitor visitor = new Visitor();
+        NonPlayableCharacter visitor = new NonPlayableCharacter();
         List<Product> products = Collections.singletonList(new Product());
 
         groceryStall.loadProducts(products);
@@ -29,7 +30,7 @@ public class Selling {
         visitor.enterStall(groceryStall.getMainDoor());
 
         visitor.buy(products, groceryStall.getCashierPlace());
-        Assert.assertEquals(Visitor.VISITOR_ON_SPAWN_MONEY_AMOUNT - 7, visitor.countMoney());
+        Assert.assertEquals(VISITOR_ON_SPAWN_MONEY_AMOUNT - 7, visitor.countMoney());
         Assert.assertEquals(1, visitor.countProducts());
         Assert.assertEquals(0, groceryStall.getStorage().size());
         Assert.assertEquals(7, groceryStall.getCashierPlace().getCashbox().countMoney());

@@ -26,6 +26,8 @@
 
         <menu name="About">
             <item name="The Game" href="/index.html"/>
+            <item name="Roadmap" href="/roadmap.html"/>
+            <item name="Issues" href="/issues.html"/>
         </menu>
 
 

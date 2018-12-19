@@ -1,7 +1,6 @@
 package stallgame.stall.cashbox;
 
 import org.junit.Test;
-import stallgame.Visitor;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.product.Product;
 
@@ -14,7 +13,7 @@ public class TransactionLoggerTest {
     @Test
     public void register() {
         NonPlayableCharacter mainChar = new NonPlayableCharacter();
-        Visitor visitor = new Visitor();
+        NonPlayableCharacter visitor = new NonPlayableCharacter();
         List<Product> products = singletonList(new Product());
         int price = 10;
         String comment = "Good Luck";

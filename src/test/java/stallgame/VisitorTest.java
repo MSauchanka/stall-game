@@ -4,9 +4,11 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import stallgame.character.NonPlayableCharacter;
 import stallgame.product.Product;
 
 import static java.util.Collections.singletonList;
+import static stallgame.character.NonPlayableCharacter.VISITOR_ON_SPAWN_MONEY_AMOUNT;
 
 public class VisitorTest {
 
@@ -15,13 +17,13 @@ public class VisitorTest {
 
     @Test
     public void countMoney() {
-        Visitor visitor = new Visitor();
-        Assert.assertEquals(Visitor.VISITOR_ON_SPAWN_MONEY_AMOUNT, visitor.countMoney());
+        NonPlayableCharacter visitor = new NonPlayableCharacter();
+        Assert.assertEquals(VISITOR_ON_SPAWN_MONEY_AMOUNT, visitor.countMoney());
     }
 
     @Test
     public void pay() {
-        Visitor visitor = new Visitor();
+        NonPlayableCharacter visitor = new NonPlayableCharacter();
         Assert.assertEquals(3, visitor.pay(3));
         Assert.assertEquals(7, visitor.countMoney());
     }
@@ -31,20 +33,20 @@ public class VisitorTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Not enough money to pay!");
 
-        Visitor visitor = new Visitor();
-        visitor.pay(Visitor.VISITOR_ON_SPAWN_MONEY_AMOUNT + 1);
+        NonPlayableCharacter visitor = new NonPlayableCharacter();
+        visitor.pay(VISITOR_ON_SPAWN_MONEY_AMOUNT + 1);
     }
 
     @Test
     public void addMoney() {
-        Visitor visitor = new Visitor();
+        NonPlayableCharacter visitor = new NonPlayableCharacter();
         visitor.addMoney(5);
-        Assert.assertEquals(Visitor.VISITOR_ON_SPAWN_MONEY_AMOUNT + 5, visitor.countMoney());
+        Assert.assertEquals(VISITOR_ON_SPAWN_MONEY_AMOUNT + 5, visitor.countMoney());
     }
 
     @Test
     public void addProducts() {
-        Visitor visitor = new Visitor();
+        NonPlayableCharacter visitor = new NonPlayableCharacter();
         visitor.addProducts(singletonList(new Product()));
         Assert.assertEquals(1, visitor.countProducts());
     }

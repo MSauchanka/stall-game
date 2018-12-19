@@ -2,7 +2,6 @@ package stallgame.stall;
 
 import stallgame.GroceryStall;
 import stallgame.Role;
-import stallgame.StallVisitor;
 import stallgame.character.NonPlayableCharacter;
 
 public class StallDoor {
@@ -18,6 +17,7 @@ public class StallDoor {
         if (!isLocked) {
             groceryStall.addVisitor(visitor);
         } else {
+            // TODO: think about role
             if (Role.SELLER.equals(visitor.getRole())) {
                 isLocked = false;
                 enter(visitor);

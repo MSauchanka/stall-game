@@ -6,7 +6,7 @@ import stallgame.GroceryStall;
 import stallgame.Role;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
-import stallgame.product.Product;
+import stallgame.item.product.Product;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,7 +1,8 @@
 package stallgame;
 
 import stallgame.character.NonPlayableCharacter;
-import stallgame.product.Product;
+import stallgame.item.key.Lock;
+import stallgame.item.product.Product;
 import stallgame.stall.CashierPlace;
 import stallgame.stall.StallDoor;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class GroceryStall {
 
-    private StallDoor backDoor = new StallDoor(this);
+    private StallDoor backDoor = new StallDoor(this, new Lock("backDoor"));
     // private ProductsLoadPlace productsLoadPlace;
     private CashierPlace cashierPlace = new CashierPlace(this);
     // private RadioPlace radioPlace;
@@ -23,7 +24,7 @@ public class GroceryStall {
 
     public final HashSet<NonPlayableCharacter> visitors = new HashSet<>(MAX_STALL_VISITORS, 1.0f);
     private List<Product> storage = new ArrayList<>();
-    private StallDoor mainDoor = new StallDoor(this);
+    private StallDoor mainDoor = new StallDoor(this, new Lock("mainDoor"));
 
 
     public StallDoor getMainDoor() {

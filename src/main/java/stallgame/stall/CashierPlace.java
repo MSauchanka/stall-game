@@ -2,7 +2,7 @@ package stallgame.stall;
 
 import stallgame.GroceryStall;
 import stallgame.character.NonPlayableCharacter;
-import stallgame.product.Product;
+import stallgame.item.product.Product;
 import stallgame.stall.cashbox.Cashbox;
 
 import java.util.List;

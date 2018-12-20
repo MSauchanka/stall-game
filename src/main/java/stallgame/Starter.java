@@ -2,10 +2,10 @@ package stallgame;
 
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
-import stallgame.product.Product;
+import stallgame.item.key.Key;
+import stallgame.item.product.Product;
 
 import java.util.Scanner;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.Collections.singletonList;
@@ -17,6 +17,7 @@ public class Starter {
         IntStream.range(0, 5).forEach(idx -> env.groceryStall.loadProducts(singletonList(new Product())));
         IntStream.range(0, 5).forEach(idx -> env.npcs.add(new NonPlayableCharacter()));
         PlayableCharacter mainChar = env.operateNpc(new NonPlayableCharacter());
+        mainChar.npc.addProducts(singletonList(new Key("mainDoor")));
         System.out.println(mainChar.npc.getFullName() + ", рассвет уже близко. Самое время открыть магазин, " +
                 "чтобы не расстроить утренних покупателей.");
         boolean gameInProgress = true;

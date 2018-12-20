@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
-import stallgame.product.Product;
+import stallgame.item.product.Product;
 
 import java.util.ArrayList;
 import java.util.List;

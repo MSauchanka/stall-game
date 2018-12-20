@@ -1,7 +1,7 @@
 package stallgame.stall.cashbox;
 
 import stallgame.character.NonPlayableCharacter;
-import stallgame.product.Product;
+import stallgame.item.product.Product;
 import stallgame.stall.CashierPlace;
 
 import java.util.List;

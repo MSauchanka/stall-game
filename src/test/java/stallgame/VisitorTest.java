@@ -5,7 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import stallgame.character.NonPlayableCharacter;
-import stallgame.product.Product;
+import stallgame.item.product.Product;
 
 import static java.util.Collections.singletonList;
 import static stallgame.character.NonPlayableCharacter.VISITOR_ON_SPAWN_MONEY_AMOUNT;

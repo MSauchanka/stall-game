@@ -1,7 +1,8 @@
 package stallgame.character;
 
 import stallgame.Role;
-import stallgame.product.Product;
+import stallgame.item.Item;
+import stallgame.item.product.Product;
 import stallgame.stall.CashierPlace;
 import stallgame.stall.StallDoor;
 import stallgame.stall.cashbox.Cashbox;
@@ -20,7 +21,7 @@ public class NonPlayableCharacter {
 
     private String fullName;
     private int money = VISITOR_ON_SPAWN_MONEY_AMOUNT;
-    private List<Product> inventory = new ArrayList<>();
+    private List<Item> inventory = new ArrayList<>();
     private Role role = Role.NO_ROLE;
 
     public static final int VISITOR_ON_SPAWN_MONEY_AMOUNT = 10;
@@ -35,7 +36,7 @@ public class NonPlayableCharacter {
     }
 
     public void leaveStall(StallDoor door) {
-        door.leave(this);
+        door.leaveAndLock(this);
         role = Role.NO_ROLE;
     }
 
@@ -116,8 +117,13 @@ public class NonPlayableCharacter {
         return inventory.size();
     }
 
-    public void addProducts(List<Product> products) {
+    // TODO: remove
+    public void addProducts(List<Item> products) {
         inventory.addAll(products);
+    }
+
+    public List<Item> getInventory() {
+        return inventory;
     }
 
     public Role getRole() {

@@ -4,26 +4,34 @@ import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
 import stallgame.item.key.Key;
 import stallgame.item.product.Product;
+import stallgame.item.product.ProductTypes;
 
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
 import static java.util.Collections.singletonList;
+import static stallgame.Constants.*;
 
 public class Starter {
 
     public static void main(String[] args) {
         Environment env = new Environment();
-        IntStream.range(0, 5).forEach(idx -> env.groceryStall.loadProducts(singletonList(new Product())));
+        Product product = new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, "Fresh meat!");
+        IntStream.range(0, 5).forEach(idx -> env.groceryStall.loadProducts(singletonList(product)));
         IntStream.range(0, 5).forEach(idx -> env.npcs.add(new NonPlayableCharacter()));
         PlayableCharacter mainChar = env.operateNpc(new NonPlayableCharacter());
-        mainChar.npc.addProducts(singletonList(new Key("mainDoor")));
+        mainChar.npc.getInventory().addAll(singletonList(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION)));
+        mainChar.npc.getInventory().addAll(singletonList(new Key(CASHIER_PLACE_LOCK, CASHIER_PLACE_KEY_DESCRIPTION)));
+
         System.out.println(mainChar.npc.getFullName() + ", рассвет уже близко. Самое время открыть магазин, " +
                 "чтобы не расстроить утренних покупателей.");
+
         boolean gameInProgress = true;
         Scanner reader = new Scanner(System.in);
         while (gameInProgress) {
-            System.out.println("Список действий: ");
+
+            System.out.println(System.lineSeparator() + "Список действий: ");
+
             IntStream.range(0, mainChar.getActions().size()).forEach(idx -> System.out.println(idx + ". "
                     + mainChar.getActions().get(idx).toString()));
             System.out.println(mainChar.getActions().size() + ". World status.");
@@ -32,7 +40,7 @@ public class Starter {
             int selection = reader.nextInt();
             if (selection > mainChar.getActions().size()) {
                 gameInProgress = false;
-                System.out.println("Игра закончена.");
+                System.out.println(System.lineSeparator() + "Игра закончена.");
             } else if (selection == mainChar.getActions().size()) {
                 printWorldStatus(mainChar, env);
             } else {

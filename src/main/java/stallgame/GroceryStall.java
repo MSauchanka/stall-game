@@ -4,15 +4,17 @@ import stallgame.character.NonPlayableCharacter;
 import stallgame.item.key.Lock;
 import stallgame.item.product.Product;
 import stallgame.stall.CashierPlace;
-import stallgame.stall.StallDoor;
+import stallgame.stall.Door;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static stallgame.Constants.BACK_DOOR_LOCK;
+
 public class GroceryStall {
 
-    private StallDoor backDoor = new StallDoor(this, new Lock("backDoor"));
+    private Door backDoor = new Door(this, new Lock(BACK_DOOR_LOCK));
     // private ProductsLoadPlace productsLoadPlace;
     private CashierPlace cashierPlace = new CashierPlace(this);
     // private RadioPlace radioPlace;
@@ -24,10 +26,10 @@ public class GroceryStall {
 
     public final HashSet<NonPlayableCharacter> visitors = new HashSet<>(MAX_STALL_VISITORS, 1.0f);
     private List<Product> storage = new ArrayList<>();
-    private StallDoor mainDoor = new StallDoor(this, new Lock("mainDoor"));
+    private Door mainDoor = new Door(this, new Lock("mainDoor"));
 
 
-    public StallDoor getMainDoor() {
+    public Door getMainDoor() {
         return mainDoor;
     }
 
@@ -43,6 +45,7 @@ public class GroceryStall {
 
     public void removeVisitor(NonPlayableCharacter visitor) {
         visitors.remove(visitor);
+        visitor.setRole(Role.NO_ROLE);
     }
 
     public void loadProducts(List<Product> products) {

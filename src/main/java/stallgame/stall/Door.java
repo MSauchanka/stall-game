@@ -4,13 +4,14 @@ import stallgame.GroceryStall;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.item.key.Key;
 import stallgame.item.key.Lock;
+import stallgame.item.key.WrongKeyException;
 
-public class StallDoor {
+public class Door {
 
     private GroceryStall groceryStall;
     private Lock lock;
 
-    public StallDoor(GroceryStall groceryStall, Lock lock) {
+    public Door(GroceryStall groceryStall, Lock lock) {
         this.groceryStall = groceryStall;
         this.lock = lock;
     }
@@ -34,24 +35,33 @@ public class StallDoor {
     }
 
     public void leaveAndLock(NonPlayableCharacter visitor) {
+        leave(visitor);
+        visitor.getInventory().stream().filter(item -> item instanceof Key).forEach(item -> {
+            Key key = (Key) item;
+            if (lock.fits(key)) {
+                lock.lock(key);
+            }
+        });
+        if (!lock.isLocked()) {
+            throw new WrongKeyException("You have no key to close the stall!");
+        }
+    }
+
+    public void leave(NonPlayableCharacter visitor) {
         if (!lock.isLocked()) {
             groceryStall.removeVisitor(visitor);
         } else {
             visitor.getInventory().stream().filter(item -> item instanceof Key).forEach(item -> {
                 Key key = (Key) item;
                 if (lock.fits(key)) {
-                    lock.lock(key);
+                    lock.unlock(key);
                 }
             });
-            if (lock.isLocked()) {
-                leaveAndLock(visitor);
+            if (!lock.isLocked()) {
+                leave(visitor);
             } else {
-                throw new RuntimeException("You are locked inside!");
+                throw new WrongKeyException("You have no key to leave the stall!");
             }
         }
-    }
-
-    public void leave(NonPlayableCharacter visitor) {
-        // TODO: implement
     }
 }

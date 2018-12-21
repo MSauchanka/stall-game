@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.item.product.Product;
+import stallgame.item.product.ProductTypes;
 
 import static java.util.Collections.singletonList;
 import static stallgame.character.NonPlayableCharacter.VISITOR_ON_SPAWN_MONEY_AMOUNT;
@@ -47,7 +48,7 @@ public class VisitorTest {
     @Test
     public void addProducts() {
         NonPlayableCharacter visitor = new NonPlayableCharacter();
-        visitor.addProducts(singletonList(new Product()));
+        visitor.getInventory().addAll(singletonList(new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, "Fresh meat!")));
         Assert.assertEquals(1, visitor.countProducts());
     }
 }

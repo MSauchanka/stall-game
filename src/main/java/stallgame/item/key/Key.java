@@ -6,7 +6,8 @@ public class Key extends Item {
 
     private String keyword;
 
-    public Key(String keyword) {
+    public Key(String keyword, String description) {
+        super(description);
         this.keyword = keyword;
     }
 

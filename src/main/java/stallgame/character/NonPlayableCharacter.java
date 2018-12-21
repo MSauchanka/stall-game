@@ -4,7 +4,7 @@ import stallgame.Role;
 import stallgame.item.Item;
 import stallgame.item.product.Product;
 import stallgame.stall.CashierPlace;
-import stallgame.stall.StallDoor;
+import stallgame.stall.Door;
 import stallgame.stall.cashbox.Cashbox;
 
 import java.io.BufferedReader;
@@ -30,12 +30,17 @@ public class NonPlayableCharacter {
         generateName();
     }
 
-    public void enterStall(StallDoor door) {
+    public void enterStall(Door door) {
         door.enter(this);
         role = Role.VISITOR;
     }
 
-    public void leaveStall(StallDoor door) {
+    public void leaveStall(Door door) {
+        door.leave(this);
+        role = Role.NO_ROLE;
+    }
+
+    public void leaveAndLockStall(Door door) {
         door.leaveAndLock(this);
         role = Role.NO_ROLE;
     }
@@ -49,12 +54,30 @@ public class NonPlayableCharacter {
         }
     }
 
+    public void leaveCashierPlace(CashierPlace place) {
+        if (Role.SELLER.equals(role)) {
+            place.leave(this);
+            role = Role.VISITOR;
+        } else {
+            throw new RuntimeException("Enter the stall to take cashier place!");
+        }
+    }
+
+    public void leaveAndLockCashierPlace(CashierPlace place) {
+        if (Role.SELLER.equals(role)) {
+            place.leaveAndLock(this);
+            role = Role.VISITOR;
+        } else {
+            throw new RuntimeException("Enter the stall to take cashier place!");
+        }
+    }
+
     public void buy(List<Product> products, CashierPlace cashierPlace) {
         // validate visitor place
         if (null != cashierPlace.observe()) {
             if (cashierPlace.isProductsAvailable()) {
                 NonPlayableCharacter seller = cashierPlace.observe();
-                int productsPrice = products.stream().mapToInt(value -> value.price).sum();
+                int productsPrice = products.stream().mapToInt(Product::getPrice).sum();
                 if (productsPrice <= countMoney()) {
                     try {
                         Cashbox cashbox = cashierPlace.getCashbox();
@@ -115,11 +138,6 @@ public class NonPlayableCharacter {
 
     public int countProducts() {
         return inventory.size();
-    }
-
-    // TODO: remove
-    public void addProducts(List<Item> products) {
-        inventory.addAll(products);
     }
 
     public List<Item> getInventory() {

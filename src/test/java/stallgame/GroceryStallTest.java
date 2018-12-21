@@ -6,10 +6,15 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
+import stallgame.item.key.Key;
+import stallgame.item.key.Lock;
 import stallgame.item.product.Product;
+import stallgame.item.product.ProductTypes;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static stallgame.Constants.*;
 
 public class GroceryStallTest {
 
@@ -21,6 +26,7 @@ public class GroceryStallTest {
         GroceryStall groceryStall = new GroceryStall();
         NonPlayableCharacter npc = new NonPlayableCharacter();
         npc.setRole(Role.SELLER);
+        npc.getInventory().add(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION));
         PlayableCharacter mainChar = new PlayableCharacter(npc);
         mainChar.npc.enterStall(groceryStall.getMainDoor());
         Assert.assertEquals(1, groceryStall.visitors.size());
@@ -37,26 +43,6 @@ public class GroceryStallTest {
         NonPlayableCharacter visitor = new NonPlayableCharacter();
         visitor.enterStall(groceryStall.getMainDoor());
     }
-
-    @Test
-    public void cashboxTransaction() {
-        GroceryStall groceryStall = new GroceryStall();
-        NonPlayableCharacter npc = new NonPlayableCharacter();
-        npc.setRole(Role.SELLER);
-        PlayableCharacter mainChar = new PlayableCharacter(npc);
-        NonPlayableCharacter visitor = new NonPlayableCharacter();
-        List<Product> products = new ArrayList<>();
-        products.add(new Product());
-
-        mainChar.npc.enterStall(groceryStall.getMainDoor());
-        groceryStall.loadProducts(products);
-        visitor.enterStall(groceryStall.getMainDoor());
-        mainChar.npc.enterCashierPlace(groceryStall.getCashierPlace());
-        // TODO: NPC handle cashbox
-//        mainChar.npc.pickUpCashbox(groceryStall.getCashierPlace().getCashbox());
-//        mainChar.npc.operateCashbox().registerTransaction(mainChar, products, 100, visitor, "no comments");
-    }
-
 
     @Test
     public void toCashierPlaceOutside() {

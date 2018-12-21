@@ -37,7 +37,7 @@ public class Cashbox {
         if (cashierPlace.getStorage().size() >= products.size()) {
             buyer.pay(price);
             money += price;
-            buyer.addProducts(products);
+            buyer.getInventory().addAll(products);
             cashierPlace.getStorage().removeAll(products);
         } else {
             throw new RuntimeException("No enough products in the storage!");

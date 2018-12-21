@@ -2,15 +2,19 @@ package stallgame.stall;
 
 import org.junit.Assert;
 import org.junit.Test;
+import stallgame.Constants;
 import stallgame.GroceryStall;
 import stallgame.Role;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
+import stallgame.item.key.Key;
 import stallgame.item.product.Product;
+import stallgame.item.product.ProductTypes;
 
 import java.util.Collections;
 import java.util.List;
 
+import static stallgame.Constants.*;
 import static stallgame.character.NonPlayableCharacter.VISITOR_ON_SPAWN_MONEY_AMOUNT;
 
 public class Selling {
@@ -21,8 +25,10 @@ public class Selling {
         NonPlayableCharacter npc = new NonPlayableCharacter();
         npc.setRole(Role.SELLER);
         PlayableCharacter mainChar = new PlayableCharacter(npc);
+        mainChar.npc.getInventory().add(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION));
+        mainChar.npc.getInventory().add(new Key(CASHIER_PLACE_LOCK, CASHIER_PLACE_KEY_DESCRIPTION));
         NonPlayableCharacter visitor = new NonPlayableCharacter();
-        List<Product> products = Collections.singletonList(new Product());
+        List<Product> products = Collections.singletonList(new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, "Fresh meat!"));
 
         groceryStall.loadProducts(products);
         mainChar.npc.enterStall(groceryStall.getMainDoor());

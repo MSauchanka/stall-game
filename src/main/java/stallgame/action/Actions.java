@@ -46,6 +46,12 @@ public enum Actions {
         public void execute(NonPlayableCharacter npc, Environment environment) {
             npc.buy(npc.wantedProducts(), environment.groceryStall.getCashierPlace());
         }
+    },
+    REVIEW_INVENTORY {
+        @Override
+        public void execute(NonPlayableCharacter npc, Environment environment) {
+            npc.reviewInventory();
+        }
     };
 
     public abstract void execute(NonPlayableCharacter npc, Environment environment);

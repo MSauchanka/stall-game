@@ -10,4 +10,5 @@ public class Constants {
     public static final String CASHIER_PLACE_KEY_DESCRIPTION = "Grocery stall cashier place key.";
 
     public static final String MEAT_FOOD = "meat";
+    public static final String MEAT_FOOD_DESCRIPTION = "Beef meat.";
 }

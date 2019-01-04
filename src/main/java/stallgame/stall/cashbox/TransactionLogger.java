@@ -1,5 +1,8 @@
 package stallgame.stall.cashbox;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import stallgame.Server;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.item.product.Product;
 
@@ -12,6 +15,8 @@ public class TransactionLogger {
     private List<Product> products;
     private int price;
     private String comment;
+
+    private static final Logger LOGGER = LogManager.getLogger(TransactionLogger.class.getName());
 
     private TransactionLogger() {
         throw new RuntimeException("Logger class!");
@@ -29,7 +34,7 @@ public class TransactionLogger {
                 .append(" to buyer ")
                 .append(buyer)
                 .append(".");
-        System.out.println(sb.toString());
+        LOGGER.debug(sb.toString());
     }
 
     public static void logTransaction(NonPlayableCharacter salesPerson, NonPlayableCharacter buyer, List<Product> products, int price, String comment) {
@@ -46,6 +51,6 @@ public class TransactionLogger {
                 .append(". Comments: ")
                 .append(comment)
                 .append(".");
-        System.out.println(sb.toString());
+        LOGGER.debug(sb.toString());
     }
 }

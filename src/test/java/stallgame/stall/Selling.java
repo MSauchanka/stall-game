@@ -14,6 +14,7 @@ import stallgame.item.product.ProductTypes;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static stallgame.Constants.*;
 import static stallgame.character.NonPlayableCharacter.VISITOR_ON_SPAWN_MONEY_AMOUNT;
 
@@ -28,7 +29,7 @@ public class Selling {
         mainChar.npc.getInventory().add(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION));
         mainChar.npc.getInventory().add(new Key(CASHIER_PLACE_LOCK, CASHIER_PLACE_KEY_DESCRIPTION));
         NonPlayableCharacter visitor = new NonPlayableCharacter();
-        List<Product> products = Collections.singletonList(new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, "Fresh meat!"));
+        List<Product> products = singletonList(new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION));
 
         groceryStall.loadProducts(products);
         mainChar.npc.enterStall(groceryStall.getMainDoor());

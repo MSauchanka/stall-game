@@ -9,6 +9,7 @@ import stallgame.item.product.Product;
 import stallgame.item.product.ProductTypes;
 
 import static java.util.Collections.singletonList;
+import static stallgame.Constants.MEAT_FOOD_DESCRIPTION;
 import static stallgame.character.NonPlayableCharacter.VISITOR_ON_SPAWN_MONEY_AMOUNT;
 
 public class VisitorTest {
@@ -48,7 +49,7 @@ public class VisitorTest {
     @Test
     public void addProducts() {
         NonPlayableCharacter visitor = new NonPlayableCharacter();
-        visitor.getInventory().addAll(singletonList(new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, "Fresh meat!")));
+        visitor.getInventory().addAll(singletonList(new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION)));
         Assert.assertEquals(1, visitor.countProducts());
     }
 }

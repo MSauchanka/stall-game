@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+        <File name="ToFile" fileName="C:\\nbcu\\self\\debug.log" immediateFlush="true" append="false">
+            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+
+        <Routing name="Routing">
+            <Routes>
+                <Script name="RoutingInit" language="JavaScript"><![CDATA[
+                    logEvent.getLevel();]]>
+                </Script>
+                <Route ref="Console" key="TRACE" />
+                <Route ref="ToFile" key="DEBUG" />
+                <!--<Route ref="Console" key="INFO" />-->
+                <!--<Route ref="Console" key="WARN" />-->
+                <!--<Route ref="Console" key="ERROR" />-->
+                <!--<Route ref="Console" key="FATAL" />-->
+            </Routes>
+        </Routing>
+
+    </Appenders>
+    <Loggers>
+        <Root level="ALL">
+            <AppenderRef ref="Routing" />
+            <!--<AppenderRef ref="ToFile"/>-->
+        </Root>
+    </Loggers>
+</Configuration>

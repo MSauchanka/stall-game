@@ -23,7 +23,7 @@ public class PlayableCharacter {
 
     public List<Actions> getActions() {
         if (Role.NO_ROLE.equals(npc.getRole())) {
-            return singletonList(Actions.ENTER_STALL);
+            return asList(Actions.ENTER_STALL, Actions.REVIEW_INVENTORY);
         }
         if (Role.VISITOR.equals(npc.getRole())) {
             Optional<Item> keyMainDoor = npc.getInventory().stream()
@@ -36,12 +36,12 @@ public class PlayableCharacter {
 
             if (keyMainDoor.isPresent()) {
                 if (keyCashierPlace.isPresent()) {
-                    return asList(Actions.LEAVE_STALL, Actions.LEAVE_AND_LOCK_STALL, Actions.BECOME_SELLER);
+                    return asList(Actions.LEAVE_STALL, Actions.LEAVE_AND_LOCK_STALL, Actions.BECOME_SELLER, Actions.REVIEW_INVENTORY, Actions.BUY);
                 }
-                return asList(Actions.LEAVE_STALL, Actions.LEAVE_AND_LOCK_STALL);
+                return asList(Actions.LEAVE_STALL, Actions.LEAVE_AND_LOCK_STALL, Actions.REVIEW_INVENTORY, Actions.BUY);
             }
 
-            return singletonList(Actions.LEAVE_STALL);
+            return asList(Actions.LEAVE_STALL, Actions.REVIEW_INVENTORY, Actions.BUY);
         }
         if (Role.SELLER.equals(npc.getRole())) {
             Optional<Item> keyCashierPlace = npc.getInventory().stream()
@@ -49,10 +49,10 @@ public class PlayableCharacter {
                     .findAny();
 
             if (keyCashierPlace.isPresent()) {
-                return asList(Actions.LEAVE_SELLER_PLACE, Actions.LEAVE_AND_LOCK_SELLER_PLACE);
+                return asList(Actions.LEAVE_SELLER_PLACE, Actions.LEAVE_AND_LOCK_SELLER_PLACE, Actions.REVIEW_INVENTORY);
             }
 
-            return singletonList(Actions.LEAVE_SELLER_PLACE);
+            return asList(Actions.LEAVE_SELLER_PLACE, Actions.REVIEW_INVENTORY);
         }
 
         return new ArrayList<>();

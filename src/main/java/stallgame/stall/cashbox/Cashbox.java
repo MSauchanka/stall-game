@@ -2,9 +2,15 @@ package stallgame.stall.cashbox;
 
 import stallgame.character.NonPlayableCharacter;
 import stallgame.item.product.Product;
+import stallgame.item.product.ProductTypes;
 import stallgame.stall.CashierPlace;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Cashbox {
 
@@ -34,14 +40,22 @@ public class Cashbox {
     }
 
     public void registerTransaction(NonPlayableCharacter mainChar, List<Product> products, int price, NonPlayableCharacter buyer, String comment) {
-        if (cashierPlace.getStorage().size() >= products.size()) {
-            buyer.pay(price);
-            money += price;
-            buyer.getInventory().addAll(products);
-            cashierPlace.getStorage().removeAll(products);
-        } else {
-            throw new RuntimeException("No enough products in the storage!");
-        }
+        buyer.pay(price);
+        money += price;
+        buyer.getInventory().addAll(products);
+        Map<ProductTypes, Long> productTypesCount = products.stream()
+                .collect(Collectors.groupingBy(Product::getType, Collectors.counting()));
+        IntStream.range(0, cashierPlace.getStorage().size()).forEach(idx -> {
+            ProductTypes productType = cashierPlace.getStorage().get(idx).getType();
+            if (null != productTypesCount.get(productType)) {
+                Long count = productTypesCount.get(productType);
+                if (count > 0) {
+                    cashierPlace.getStorage().remove(idx);
+                    count -= 1;
+                    productTypesCount.put(productType, count);
+                }
+            }
+        });
         TransactionLogger.logTransaction(mainChar, buyer, products, price, comment);
     }
 }

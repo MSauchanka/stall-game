@@ -12,11 +12,11 @@ import java.util.stream.IntStream;
 import static java.util.Collections.singletonList;
 import static stallgame.Constants.*;
 
-public class Starter {
+public class Client {
 
     public static void main(String[] args) {
         Environment env = new Environment();
-        Product product = new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, "Fresh meat!");
+        Product product = new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION);
         IntStream.range(0, 5).forEach(idx -> env.groceryStall.loadProducts(singletonList(product)));
         IntStream.range(0, 5).forEach(idx -> env.npcs.add(new NonPlayableCharacter()));
         PlayableCharacter mainChar = env.operateNpc(new NonPlayableCharacter());

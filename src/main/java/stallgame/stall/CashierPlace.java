@@ -4,9 +4,12 @@ import stallgame.GroceryStall;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.item.key.Lock;
 import stallgame.item.product.Product;
+import stallgame.item.product.ProductTypes;
 import stallgame.stall.cashbox.Cashbox;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static stallgame.Constants.CASHIER_PLACE_LOCK;
 
@@ -53,8 +56,19 @@ public class CashierPlace {
         return seller;
     }
 
-    public boolean isProductsAvailable() {
-        return !groceryStall.getStorage().isEmpty();
+    public boolean isProductsAvailable(List<Product> products) {
+        if (!groceryStall.getStorage().isEmpty()) {
+            Map<ProductTypes, List<Product>> productTypesRequired = products.stream()
+                    .collect(Collectors.groupingBy(Product::getType));
+            Map<ProductTypes, List<Product>> productTypesStorage = groceryStall.getStorage().stream()
+                    .collect(Collectors.groupingBy(Product::getType));
+            if (productTypesStorage.keySet().containsAll(productTypesRequired.keySet())) {
+                return productTypesRequired.entrySet().stream()
+                        .allMatch(entry -> productTypesStorage.get(entry.getKey()).size() >= entry.getValue().size());
+            }
+            return false;
+        }
+        return false;
     }
 
     public List<Product> getStorage() {

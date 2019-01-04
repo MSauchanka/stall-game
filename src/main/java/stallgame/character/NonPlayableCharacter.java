@@ -1,8 +1,13 @@
 package stallgame.character;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import stallgame.Goal;
 import stallgame.Role;
+import stallgame.Server;
 import stallgame.item.Item;
 import stallgame.item.product.Product;
+import stallgame.item.product.ProductTypes;
 import stallgame.stall.CashierPlace;
 import stallgame.stall.Door;
 import stallgame.stall.cashbox.Cashbox;
@@ -12,10 +17,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
+
+import static java.util.Collections.singletonList;
+import static stallgame.Constants.MEAT_FOOD;
+import static stallgame.Constants.MEAT_FOOD_DESCRIPTION;
 
 public class NonPlayableCharacter {
 
@@ -23,7 +36,10 @@ public class NonPlayableCharacter {
     private int money = VISITOR_ON_SPAWN_MONEY_AMOUNT;
     private List<Item> inventory = new ArrayList<>();
     private Role role = Role.NO_ROLE;
+    private Goal goal = Goal.VISIT;
+    private int mood = 50;
 
+    private static final Logger LOGGER = LogManager.getLogger(NonPlayableCharacter.class.getName());
     public static final int VISITOR_ON_SPAWN_MONEY_AMOUNT = 10;
 
     public NonPlayableCharacter() {
@@ -75,13 +91,13 @@ public class NonPlayableCharacter {
     public void buy(List<Product> products, CashierPlace cashierPlace) {
         // validate visitor place
         if (null != cashierPlace.observe()) {
-            if (cashierPlace.isProductsAvailable()) {
+            if (cashierPlace.isProductsAvailable(products)) {
                 NonPlayableCharacter seller = cashierPlace.observe();
                 int productsPrice = products.stream().mapToInt(Product::getPrice).sum();
                 if (productsPrice <= countMoney()) {
                     try {
                         Cashbox cashbox = cashierPlace.getCashbox();
-                        cashbox.registerTransaction(seller, products, productsPrice, this, "From visitor.buy");
+                        cashbox.registerTransaction(seller, products, productsPrice, this, "From npc.buy");
                     } catch (Exception e) {
                         throw new RuntimeException("Transaction exception!");
                         // if fails rollback
@@ -106,26 +122,31 @@ public class NonPlayableCharacter {
         throw new RuntimeException("Not enough money to pay!");
     }
 
+    public void reviewInventory() {
+        LOGGER.info(System.lineSeparator());
+        LOGGER.info("Inventory:");
+        if (inventory.isEmpty()) {
+            LOGGER.info("- No items in the inventory!");
+        }
+        IntStream.range(0, inventory.size()).forEach(idx -> LOGGER.info(idx + ". " + inventory.get(idx).getDescription()));
+        LOGGER.info(System.lineSeparator());
+    }
+
     private void generateName() {
-        int lines = 0;
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("NpcNames")))) {
-            while (br.readLine() != null) lines++;
+        String line;
+        ArrayList<String> names = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/NpcNames")))) {
+            while ((line = br.readLine()) != null) {
+                names.add(line.trim());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int randomInt = new Random().ints(0, lines).limit(1).findFirst().getAsInt();
-        try {
-            String s = Files.readAllLines(Paths.get(getClass().getClassLoader()
-                    .getResource("NpcNames").toURI())).get(randomInt);
-            fullName = s;
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
+        fullName = names.get(new Random().nextInt(names.size()));
     }
 
     public List<Product> wantedProducts() {
-        // TODO: question
-        return new ArrayList<>();
+        return singletonList(new Product(ProductTypes.FOOD, MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION));
     }
 
     public void addMoney(int amount) {

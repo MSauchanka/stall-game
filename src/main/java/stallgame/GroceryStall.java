@@ -23,7 +23,7 @@ public class GroceryStall {
     // private StallQueue stallQueue;
 
     public static final int MAX_STALL_VISITORS = 1;
-
+    // TODO validate visitor
     public final HashSet<NonPlayableCharacter> visitors = new HashSet<>(MAX_STALL_VISITORS, 1.0f);
     private List<Product> storage = new ArrayList<>();
     private Door mainDoor = new Door(this, new Lock("mainDoor"));

@@ -10,6 +10,8 @@ public class Environment {
 
     public GroceryStall groceryStall = new GroceryStall();
     public Set<NonPlayableCharacter> npcs = new HashSet<>();
+    public long tics = 0;
+    public int frequency = 24;
 
     public PlayableCharacter operateNpc(NonPlayableCharacter npc) {
         return new PlayableCharacter(npc);

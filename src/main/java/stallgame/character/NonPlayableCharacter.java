@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import stallgame.Goal;
 import stallgame.Role;
-import stallgame.Server;
 import stallgame.item.Item;
 import stallgame.item.product.Product;
 import stallgame.item.product.ProductTypes;
@@ -15,13 +14,7 @@ import stallgame.stall.cashbox.Cashbox;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -32,15 +25,19 @@ import static stallgame.Constants.MEAT_FOOD_DESCRIPTION;
 
 public class NonPlayableCharacter {
 
-    private String fullName;
-    private int money = VISITOR_ON_SPAWN_MONEY_AMOUNT;
-    private List<Item> inventory = new ArrayList<>();
-    private Role role = Role.NO_ROLE;
-    private Goal goal = Goal.VISIT;
-    private int mood = 50;
-
     private static final Logger LOGGER = LogManager.getLogger(NonPlayableCharacter.class.getName());
     public static final int VISITOR_ON_SPAWN_MONEY_AMOUNT = 10;
+    public static final int MIN_AT_ROLE_TIME = 10;
+
+    private int money = VISITOR_ON_SPAWN_MONEY_AMOUNT;
+    private List<Item> inventory = new ArrayList<>();
+
+    private Role role = Role.NO_ROLE;
+    private Goal goal = Goal.TO_STALL_BUY;
+
+    public int atRole = 0;
+
+    private String fullName;
 
     public NonPlayableCharacter() {
         generateName();
@@ -171,10 +168,19 @@ public class NonPlayableCharacter {
 
     public void setRole(Role role) {
         this.role = role;
+        atRole = 0;
     }
 
     public String getFullName() {
         return fullName;
+    }
+
+    public Goal getGoal() {
+        return goal;
+    }
+
+    public void setGoal(Goal goal) {
+        this.goal = goal;
     }
 
     @Override

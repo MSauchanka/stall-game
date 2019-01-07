@@ -52,6 +52,13 @@ public enum Actions {
         public void execute(NonPlayableCharacter npc, Environment environment) {
             npc.reviewInventory();
         }
+    },
+    WAIT {
+        @Override
+        public void execute(NonPlayableCharacter npc, Environment environment) {
+            npc.atRole += 1;
+            System.out.println();
+        }
     };
 
     public abstract void execute(NonPlayableCharacter npc, Environment environment);

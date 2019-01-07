@@ -22,9 +22,9 @@ public class GroceryStall {
     // private StallWindow stallWindow;
     // private StallQueue stallQueue;
 
-    public static final int MAX_STALL_VISITORS = 1;
+    public static final int MAX_STALL_VISITORS = 10;
     // TODO validate visitor
-    public final HashSet<NonPlayableCharacter> visitors = new HashSet<>(MAX_STALL_VISITORS, 1.0f);
+    public final HashSet<NonPlayableCharacter> visitors = new HashSet<>();
     private List<Product> storage = new ArrayList<>();
     private Door mainDoor = new Door(this, new Lock("mainDoor"));
 
@@ -38,8 +38,10 @@ public class GroceryStall {
     }
 
     public void addVisitor(NonPlayableCharacter visitor) {
-        if (!visitors.contains(visitor)) {
-            visitors.add(visitor);
+        if (MAX_STALL_VISITORS >= visitors.size()) {
+            if (!visitors.contains(visitor)) {
+                visitors.add(visitor);
+            }
         }
     }
 

@@ -45,6 +45,7 @@ public class NonPlayableCharacter {
 
     public void enterStall(Door door) {
         door.enter(this);
+        // TODO: fix set role
         role = Role.VISITOR;
     }
 

@@ -1,45 +1,46 @@
-## NPC
+## Основная идея
 
-История продавщицы ларька, который расположен у пляжа где распиливают старые корабли. Страна 3-го мира, бедность. У ГГ есть семья, где мужчины работают на распиле кораблей, а женщины где придется.
-ГГ герой может решать сколько дней работать вподряд и где ночевать. Работа или дом. Во сколько открываться закрываться. Решать общаться с покупателями или нет, обсчитывать или нет и т д
-История рассказывается из радио в ларьке, 
+История продавщицы ларька, который расположен у пляжа где распиливают старые корабли. Страна 3-го мира, бедность. 
+У ГГ есть семья, где мужчины работают на распиле кораблей, а женщины где придется. ГГ герой может решать сколько дней
+работать вподряд и где ночевать. Работа или дом. Во сколько открываться закрываться. Решать общаться с покупателями или 
+нет, обсчитывать или нет и т д.
+
+## Основной контейнер World.class
+
+World содержит элементы, которыми оперирует Server для эмуляции мира игры, а также Client для участия в игровом процессе.
+
+%{snippet|id=world-1|url=file:///C:/nbcu/self/java_sessions/src/main/java/stallgame/World.java}
+
+## Магазин GroceryStall.class
+
+Сущность, принадлежащая World.class, в котором NPC могут принимать роль VISITOR, обменять товар на деньги. Обмен 
+происходит между SELLER и первым в очереди VISITOR, если товар в наличии в storage и у покупателя достаточно денег.
+Транзакция регестрируется Cashbox.class.
+Количество VISITOR и SELLER ограничено. SELLER имеет отдельное место CashierPlace.class принадележащее GroceryStall.class. 
+Доступ в магазин ограничен Door.class.
+GroceryStall.class присваивает Role каждому NPC, который был добавлен в коллекцию Visitors.
+
+## Место продавца CashierPlace.class 
+
+Содержит инстанс GroceryStall.class, Cashbox.class и NonPlayableCharacter.class.
+Доступ ограничен Door.class. Присваивает Role SELLER npc продавцу.
+
+## Касса Cashbox.class
+
+Содержит инстанс CashierPlace.class и переменную int Money. Используется для регистрации транзакций между NPC.
+
+## Дверь Door.class
+
+Содержит инстанс Lock.class и используется для ограничения доступа. Проверка доступа осуществляется путем сравнивания 
+ключая, который содержится в инстансе Lock.class и у npc, который запрашивает проверку доступа.
+
+## Замок Lock.class
+
+Содержит переменную String keyword, которая выступает ключем и используется в Door.class для ограничения доступа.
 
 
-World
-- WorldTime
-- DayQuoter
-- Events
-- Characters
-- Areas
 
-Territories
-- Ships disassemble factory 
-- Grocery stall near factory
 
- Characters
-- Main character (stall seller)
-- Main char’s family
-- Buyers
-- hooligans
 
-Main character
-- Name
-- Stamina
-- Abilities (will help count money, products and etc TBD)
 
-Grocery Stall
-- Goods/products
-- Radio
-- Stall elements and their status (windows, door and etc)
 
-Buyer
-- Name
-- Mood
-- Required goods
-- Money
-- History/background
-
-Product
-- Name
-- Price
-- inStock

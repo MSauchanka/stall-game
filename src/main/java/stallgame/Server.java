@@ -29,12 +29,12 @@ public class Server {
     private static final Logger LOGGER = LogManager.getLogger(Server.class.getName());
 
     public static void main(String[] args) {
-        Environment env = createEnvironment();
+        World world = createWorld();
         // Make npc playable
-        Set<PlayableCharacter> wrappedNpc = env.npcs.stream()
+        Set<PlayableCharacter> wrappedNpc = world.population.stream()
                 .map(npc -> {
-                    int selection = new Random().nextInt(env.npcs.size());
-                    if (selection < env.npcs.size() / 3) {
+                    int selection = new Random().nextInt(world.population.size());
+                    if (selection < world.population.size() / 3) {
                         npc.getInventory().addAll(singletonList(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION)));
                         npc.getInventory().addAll(singletonList(new Key(CASHIER_PLACE_LOCK, CASHIER_PLACE_KEY_DESCRIPTION)));
                     }
@@ -43,11 +43,11 @@ public class Server {
                 .collect(Collectors.toSet());
         for (; ; ) {
             long epochSecondStart = Instant.now().toEpochMilli();
-            gameLoop(env, wrappedNpc);
+            gameLoop(world, wrappedNpc);
             long epochSecondEnd = Instant.now().toEpochMilli();
             // Calculate amount of millisec required for one frame.
             // If game loop execution took less, then wait.
-            long delay = 1000 / env.frequency - (epochSecondEnd - epochSecondStart);
+            long delay = 1000 / world.serverFramesFrequency - (epochSecondEnd - epochSecondStart);
             if (delay > 0) {
                 try {
                     Thread.sleep(delay);
@@ -55,11 +55,11 @@ public class Server {
                     e.printStackTrace();
                 }
             }
-            env.tics += 1;
+            world.tics += 1;
         }
     }
 
-    private static void gameLoop(Environment env, Set<PlayableCharacter> wrappedNpc) {
+    private static void gameLoop(World world, Set<PlayableCharacter> wrappedNpc) {
         wrappedNpc.forEach(wnpc -> {
             int selection = new Random().nextInt(wnpc.getActions().size());
             LOGGER.info(wnpc.npc.getFullName() + " selection: " + selection);
@@ -69,7 +69,7 @@ public class Server {
                 if (wnpc.npc.atRole > MIN_AT_ROLE_TIME) {
                     List<Pair> pairs = createWeightPairs(wnpc);
                     Actions action = (Actions) new EnumeratedDistribution(pairs).sample();
-                    action.execute(wnpc.npc, env);
+                    action.execute(wnpc.npc, world);
                 } else {
                     wnpc.npc.atRole += 1;
                 }
@@ -78,7 +78,7 @@ public class Server {
             }
         });
         clearConsole();
-        printAllWorldStatus(env);
+        printAllWorldStatus(world);
     }
 
     private static List<Pair> createWeightPairs(PlayableCharacter wnpc) {
@@ -148,31 +148,31 @@ public class Server {
     }
 
 
-    private static Environment createEnvironment() {
-        Environment env = new Environment();
+    private static World createWorld() {
+        World world = new World();
         Product product = new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION);
-        IntStream.range(0, 50).forEach(idx -> env.groceryStall.loadProducts(singletonList(product)));
-        IntStream.range(0, 50).forEach(idx -> env.npcs.add(new NonPlayableCharacter()));
+        IntStream.range(0, 50).forEach(idx -> world.groceryStall.loadProducts(singletonList(product)));
+        IntStream.range(0, 50).forEach(idx -> world.population.add(new NonPlayableCharacter()));
 
-        return env;
+        return world;
     }
 
-    private static void printAllWorldStatus(Environment environment) {
-        LOGGER.trace("NPC count: " + environment.npcs.size());
-        LOGGER.trace(Role.VISITOR + " count : " + environment.npcs.stream()
+    private static void printAllWorldStatus(World world) {
+        LOGGER.trace("NPC count: " + world.population.size());
+        LOGGER.trace(Role.VISITOR + " count : " + world.population.stream()
                 .filter(npc -> Role.VISITOR.equals(npc.getRole()))
                 .count());
-        LOGGER.trace("Grocery VISITORS MAP count : " + environment.groceryStall.visitors.size());
-        LOGGER.trace(Role.SELLER + " name : " + environment.npcs.stream()
+        LOGGER.trace("Grocery VISITORS MAP count : " + world.groceryStall.visitors.size());
+        LOGGER.trace(Role.SELLER + " name : " + world.population.stream()
                 .filter(npc -> Role.SELLER.equals(npc.getRole()))
                 .map(NonPlayableCharacter::getFullName)
                 .findFirst().orElse("No seller at the moment!"));
-        LOGGER.trace(Role.NO_ROLE + " count : " + environment.npcs.stream()
+        LOGGER.trace(Role.NO_ROLE + " count : " + world.population.stream()
                 .filter(npc -> Role.NO_ROLE.equals(npc.getRole()))
                 .count());
-        LOGGER.trace("Grocery stall products count: " + environment.groceryStall.getStorage().size());
-        LOGGER.trace("Cashbox money count: " + environment.groceryStall.getCashierPlace().getCashbox().countMoney());
-        LOGGER.trace("Tics passed: " + environment.tics);
+        LOGGER.trace("Grocery stall products count: " + world.groceryStall.getStorage().size());
+        LOGGER.trace("Cashbox money count: " + world.groceryStall.getCashierPlace().getCashbox().countMoney());
+        LOGGER.trace("Tics passed: " + world.tics);
     }
 
     private static void clearConsole() {

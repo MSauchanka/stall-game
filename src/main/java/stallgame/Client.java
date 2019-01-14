@@ -15,11 +15,11 @@ import static stallgame.Constants.*;
 public class Client {
 
     public static void main(String[] args) {
-        Environment env = new Environment();
+        World world = new World();
         Product product = new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION);
-        IntStream.range(0, 5).forEach(idx -> env.groceryStall.loadProducts(singletonList(product)));
-        IntStream.range(0, 5).forEach(idx -> env.npcs.add(new NonPlayableCharacter()));
-        PlayableCharacter mainChar = env.operateNpc(new NonPlayableCharacter());
+        IntStream.range(0, 5).forEach(idx -> world.groceryStall.loadProducts(singletonList(product)));
+        IntStream.range(0, 5).forEach(idx -> world.population.add(new NonPlayableCharacter()));
+        PlayableCharacter mainChar = world.operateNpc(new NonPlayableCharacter());
         mainChar.npc.getInventory().addAll(singletonList(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION)));
         mainChar.npc.getInventory().addAll(singletonList(new Key(CASHIER_PLACE_LOCK, CASHIER_PLACE_KEY_DESCRIPTION)));
 
@@ -42,25 +42,25 @@ public class Client {
                 gameInProgress = false;
                 System.out.println(System.lineSeparator() + "Игра закончена.");
             } else if (selection == mainChar.getActions().size()) {
-                printWorldStatus(mainChar, env);
+                printWorldStatus(mainChar, world);
             } else {
-                mainChar.getActions().get(selection).execute(mainChar.npc, env);
+                mainChar.getActions().get(selection).execute(mainChar.npc, world);
             }
         }
     }
 
-    private static void printWorldStatus(PlayableCharacter mainChar, Environment environment) {
+    private static void printWorldStatus(PlayableCharacter mainChar, World world) {
         System.out.println("Main character name: " + mainChar.npc.getFullName());
         System.out.println("Main character role: " + mainChar.npc.getRole());
-        System.out.println("World npc count: " + environment.npcs.size());
-        System.out.println("Grocery stall visitors count: " + environment.npcs.stream()
+        System.out.println("World npc count: " + world.population.size());
+        System.out.println("Grocery stall visitors count: " + world.population.stream()
                 .filter(npc -> Role.VISITOR.equals(npc.getRole()))
                 .count());
-        System.out.println("Grocery stall seller count: " + environment.npcs.stream()
+        System.out.println("Grocery stall seller count: " + world.population.stream()
                 .filter(npc -> Role.SELLER.equals(npc.getRole()))
                 .count());
-        System.out.println("Grocery stall products count: " + environment.groceryStall.getStorage().size());
-        System.out.println("Cashbox money count: " + environment.groceryStall.getCashierPlace().getCashbox().countMoney());
+        System.out.println("Grocery stall products count: " + world.groceryStall.getStorage().size());
+        System.out.println("Cashbox money count: " + world.groceryStall.getCashierPlace().getCashbox().countMoney());
     }
 
 }

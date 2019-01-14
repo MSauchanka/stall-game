@@ -26,6 +26,7 @@
 
         <menu name="About">
             <item name="The Game" href="/index.html"/>
+            <item name="NPC description" href="/npc_description.md"/>
             <item name="Roadmap" href="/roadmap.html"/>
             <item name="Issues" href="/issues.html"/>
         </menu>

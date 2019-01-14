@@ -42,10 +42,9 @@ public class NonPlayableCharacter {
     public NonPlayableCharacter() {
         generateName();
     }
-
+    // TODO: ьщму set roles to places
     public void enterStall(Door door) {
         door.enter(this);
-        // TODO: fix set role
         role = Role.VISITOR;
     }
 

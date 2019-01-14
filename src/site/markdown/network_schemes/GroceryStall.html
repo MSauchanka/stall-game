@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="../resources/vis.min.js"></script>
+    <link href="../resources/vis.min.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        #mynetwork {
+            width: 1280px;
+            height: 720px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+<body>
+<div id="mynetwork"></div>
+
+<script type="text/javascript">
+    // create an array with nodes
+    var nodes = new vis.DataSet([
+        {id: 1, label: 'GroceryStall'},
+        {id: 2, label: 'mainDoor'},
+        {id: 3, label: 'visitors'},
+        {id: 4, label: 'storage'},
+        {id: 5, label: 'cashierPlace'},
+        {id: 6, label: 'groceryStall instance'},
+        {id: 7, label: 'groceryStall instance'},
+        {id: 8, label: 'Seller'},
+        {id: 9, label: 'cashbox'},
+        {id: 10, label: 'cashierPlace door'},
+        {id: 11, label: 'lock'}
+    ]);
+
+    // create an array with edges
+    var edges = new vis.DataSet([
+        {from: 2, to: 1},
+        {from: 3, to: 1},
+        {from: 4, to: 1},
+        {from: 5, to: 1},
+        {from: 6, to: 2},
+        {from: 7, to: 5},
+        {from: 8, to: 5},
+        {from: 9, to: 5},
+        {from: 10, to: 5},
+        {from: 11, to: 2}
+    ]);
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+
+    // provide the data in the vis format
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+    var options = {
+  edges:{
+    arrows: 'to',
+    color: 'red',
+    font: '12px arial #ff0000',
+    scaling:{
+      label: true,
+    },
+    shadow: true,
+    smooth: true,
+  }
+}
+
+    // initialize your network!
+    var network = new vis.Network(container, data, options);
+</script>
+</body>
+</html>

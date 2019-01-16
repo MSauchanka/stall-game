@@ -5,8 +5,6 @@ import stallgame.item.product.Product;
 import stallgame.item.product.ProductTypes;
 import stallgame.stall.CashierPlace;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,7 +15,11 @@ public class Cashbox {
     private int money = 0;
     private CashierPlace cashierPlace;
 
-    public Cashbox(CashierPlace cashierPlace) {
+    public static Cashbox createWith(CashierPlace cashierPlace) {
+        return new Cashbox(cashierPlace);
+    }
+
+    private Cashbox(CashierPlace cashierPlace) {
         this.cashierPlace = cashierPlace;
     }
 

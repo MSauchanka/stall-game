@@ -1,33 +1,39 @@
 package stallgame;
 
-import stallgame.character.NonPlayableCharacter;
-import stallgame.item.key.Lock;
+import stallgame.container.Container;
+import stallgame.door.Door;
+import stallgame.door.key.Lock;
 import stallgame.item.product.Product;
 import stallgame.stall.CashierPlace;
-import stallgame.stall.Door;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
-import static stallgame.Constants.BACK_DOOR_LOCK;
+public class GroceryStall extends Container {
 
-public class GroceryStall {
+    private static final int MAX_STALL_VISITORS = 10;
+    private static final String MAIN_DOOR_KEY = "mainDoor";
 
-    private Door backDoor = new Door(this, new Lock(BACK_DOOR_LOCK));
-    // private ProductsLoadPlace productsLoadPlace;
-    private CashierPlace cashierPlace = new CashierPlace(this);
-    // private RadioPlace radioPlace;
-    // private RestPlace restPlace;
-    // private StallWindow stallWindow;
-    // private StallQueue stallQueue;
-
-    public static final int MAX_STALL_VISITORS = 10;
-    // TODO validate visitor
-    public final HashSet<NonPlayableCharacter> visitors = new HashSet<>();
     private List<Product> storage = new ArrayList<>();
-    private Door mainDoor = new Door(this, new Lock("mainDoor"));
 
+    private World world;
+    private CashierPlace cashierPlace;
+    private Door mainDoor;
+
+    public static GroceryStall createWith(World world) {
+        return new GroceryStall(MAX_STALL_VISITORS, Role.VISITOR)
+                .addWorld(world)
+                .addMainDoor()
+                .addCashierPlace();
+    }
+
+    private GroceryStall(int maxVisitorsCount, Role role) {
+        super(maxVisitorsCount, role);
+    }
+
+    public void loadProducts(List<Product> products) {
+        storage.addAll(products);
+    }
 
     public Door getMainDoor() {
         return mainDoor;
@@ -37,24 +43,26 @@ public class GroceryStall {
         return cashierPlace;
     }
 
-    public void addVisitor(NonPlayableCharacter visitor) {
-        if (MAX_STALL_VISITORS >= visitors.size()) {
-            if (!visitors.contains(visitor)) {
-                visitors.add(visitor);
-            }
-        }
-    }
-
-    public void removeVisitor(NonPlayableCharacter visitor) {
-        visitors.remove(visitor);
-        visitor.setRole(Role.NO_ROLE);
-    }
-
-    public void loadProducts(List<Product> products) {
-        storage.addAll(products);
-    }
-
     public List<Product> getStorage() {
         return storage;
     }
+
+    private GroceryStall addWorld(World world) {
+        this.world = world;
+
+        return this;
+    }
+
+    private GroceryStall addMainDoor() {
+        this.mainDoor = Door.createWith(this, world, Lock.createWith(MAIN_DOOR_KEY));
+
+        return this;
+    }
+
+    private GroceryStall addCashierPlace() {
+        this.cashierPlace = CashierPlace.createWith(this);
+
+        return this;
+    }
+
 }

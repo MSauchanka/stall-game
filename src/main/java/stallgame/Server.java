@@ -7,9 +7,10 @@ import org.apache.logging.log4j.Logger;
 import stallgame.action.Actions;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
-import stallgame.item.key.Key;
+import stallgame.door.key.Key;
 import stallgame.item.product.Product;
 import stallgame.item.product.ProductTypes;
+import stallgame.stall.CashierPlace;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -31,12 +32,13 @@ public class Server {
     public static void main(String[] args) {
         World world = createWorld();
         // Make npc playable
-        Set<PlayableCharacter> wrappedNpc = world.population.stream()
+        Set<PlayableCharacter> wrappedNpc = world.getAllNpcsStream()
                 .map(npc -> {
-                    int selection = new Random().nextInt(world.population.size());
-                    if (selection < world.population.size() / 3) {
+                    int count = (int) world.getAllNpcsStream().count();
+                    int selection = new Random().nextInt(count);
+                    if (selection < count / 3) {
                         npc.getInventory().addAll(singletonList(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION)));
-                        npc.getInventory().addAll(singletonList(new Key(CASHIER_PLACE_LOCK, CASHIER_PLACE_KEY_DESCRIPTION)));
+                        npc.getInventory().addAll(singletonList(new Key(CashierPlace.CASHIER_PLACE_LOCK, CASHIER_PLACE_KEY_DESCRIPTION)));
                     }
                     return new PlayableCharacter(npc);
                 })
@@ -149,25 +151,25 @@ public class Server {
 
 
     private static World createWorld() {
-        World world = new World();
+        World world = World.create();
         Product product = new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION);
         IntStream.range(0, 50).forEach(idx -> world.groceryStall.loadProducts(singletonList(product)));
-        IntStream.range(0, 50).forEach(idx -> world.population.add(new NonPlayableCharacter()));
+        IntStream.range(0, 50).forEach(idx -> world.addVisitor(new NonPlayableCharacter()));
 
         return world;
     }
 
     private static void printAllWorldStatus(World world) {
-        LOGGER.trace("NPC count: " + world.population.size());
-        LOGGER.trace(Role.VISITOR + " count : " + world.population.stream()
+        LOGGER.trace("NPC count: " + world.getAllNpcsStream().count());
+        LOGGER.trace(Role.VISITOR + " count : " + world.getAllNpcsStream()
                 .filter(npc -> Role.VISITOR.equals(npc.getRole()))
                 .count());
-        LOGGER.trace("Grocery VISITORS MAP count : " + world.groceryStall.visitors.size());
-        LOGGER.trace(Role.SELLER + " name : " + world.population.stream()
+        LOGGER.trace("Grocery VISITORS MAP count : " + world.groceryStall.getVisitors().size());
+        LOGGER.trace(Role.SELLER + " name : " + world.getAllNpcsStream()
                 .filter(npc -> Role.SELLER.equals(npc.getRole()))
                 .map(NonPlayableCharacter::getFullName)
                 .findFirst().orElse("No seller at the moment!"));
-        LOGGER.trace(Role.NO_ROLE + " count : " + world.population.stream()
+        LOGGER.trace(Role.NO_ROLE + " count : " + world.getAllNpcsStream()
                 .filter(npc -> Role.NO_ROLE.equals(npc.getRole()))
                 .count());
         LOGGER.trace("Grocery stall products count: " + world.groceryStall.getStorage().size());

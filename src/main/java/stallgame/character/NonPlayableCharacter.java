@@ -8,7 +8,7 @@ import stallgame.item.Item;
 import stallgame.item.product.Product;
 import stallgame.item.product.ProductTypes;
 import stallgame.stall.CashierPlace;
-import stallgame.stall.Door;
+import stallgame.door.Door;
 import stallgame.stall.cashbox.Cashbox;
 
 import java.io.BufferedReader;
@@ -41,48 +41,6 @@ public class NonPlayableCharacter {
 
     public NonPlayableCharacter() {
         generateName();
-    }
-    // TODO: ьщму set roles to places
-    public void enterStall(Door door) {
-        door.enter(this);
-        role = Role.VISITOR;
-    }
-
-    public void leaveStall(Door door) {
-        door.leave(this);
-        role = Role.NO_ROLE;
-    }
-
-    public void leaveAndLockStall(Door door) {
-        door.leaveAndLock(this);
-        role = Role.NO_ROLE;
-    }
-
-    public void enterCashierPlace(CashierPlace place) {
-        if (!Role.NO_ROLE.equals(role)) {
-            place.enter(this);
-            role = Role.SELLER;
-        } else {
-            throw new RuntimeException("Enter the stall to take cashier place!");
-        }
-    }
-
-    public void leaveCashierPlace(CashierPlace place) {
-        if (Role.SELLER.equals(role)) {
-            place.leave(this);
-            role = Role.VISITOR;
-        } else {
-            throw new RuntimeException("Enter the stall to take cashier place!");
-        }
-    }
-
-    public void leaveAndLockCashierPlace(CashierPlace place) {
-        if (Role.SELLER.equals(role)) {
-            place.leaveAndLock(this);
-            role = Role.VISITOR;
-        } else {
-            throw new RuntimeException("Enter the stall to take cashier place!");
-        }
     }
 
     public void buy(List<Product> products, CashierPlace cashierPlace) {
@@ -144,6 +102,18 @@ public class NonPlayableCharacter {
 
     public List<Product> wantedProducts() {
         return singletonList(new Product(ProductTypes.FOOD, MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION));
+    }
+
+    public void enter(Door door) {
+        door.enter(this);
+    }
+
+    public void leave(Door door) {
+        door.leave(this);
+    }
+
+    public void leaveAndLock(Door door) {
+        door.leaveAndLock(this);
     }
 
     public void addMoney(int amount) {

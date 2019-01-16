@@ -1,4 +1,4 @@
-package stallgame.item.key;
+package stallgame.door.key;
 
 import stallgame.item.Item;
 

@@ -1,11 +1,15 @@
-package stallgame.item.key;
+package stallgame.door.key;
 
 public class Lock {
 
     private String keyword;
     private boolean isLocked = true;
 
-    public Lock(String keyword) {
+    public static Lock createWith(String keyword) {
+        return new Lock(keyword);
+    }
+
+    private Lock(String keyword) {
         this.keyword = keyword;
     }
 

@@ -19,7 +19,12 @@
 но сервер был отдельным)
 - иметь возможность запускать на одном сервере несколько Environment (Server) к которым можно подключаться
 
-
+Для зданий добавить:
+    // private ProductsLoadPlace productsLoadPlace;
+    // private RadioPlace radioPlace;
+    // private RestPlace restPlace;
+    // private StallWindow stallWindow;
+    // private StallQueue stallQueue;
 
 ## Done
 
@@ -62,13 +67,18 @@ Jan, 4
 - Дoбавлены роли IN_BUS, AROUND_STALL, AT_WORK (только на уровне enum)
 - Дoбавлен таймер нахождения в роли
   
-Jan, 9
+Jan, 16
 
-- Локация знает количество людей, люди знают в какой они локации (схема - можно юзать http://visjs.org/ )
+- Добавлено -> Локация знает количество людей, люди знают в какой они локации (схема - можно юзать http://visjs.org/ )
     - Люди и здания в world, комнаты в здании
-- Закончить текцщие таски (баги, роли, документация (https://maven.apache.org/guides/mini/guide-snippet-macro.html), схема сервера (доп картинка))
+- Добавлены статические методы для инстанциации локаций мира (проапдейтаны классы и тесты)
+- Добавлен класс Container который базовый для всех локаций с npc
+- Дверь теперь класс который связывает локации (роли) между собой и вызывает у локаций add remove npc
+- У npc убраны все методы которые привязывали их к локации и добавлены универсальные enter, leave, leave and lock
+- Добавлена документация и схемы http://visjs.org/ НО НЕ СОБРАНЫ НА ОДНОЙ MD PAGE - НАДО РАЗОБРАТЬСЯ КАК
+-  ЧАСТИЧНО - Закончить текцщие таски (баги, роли, документация (https://maven.apache.org/guides/mini/guide-snippet-macro.html), схема сервера (доп картинка))
     - Документацияв репо - https://blog.github.com/2016-08-22-publish-your-project-documentation-with-github-pages/
-- Подключение клиента через сеть
+- ОЗНАКОМИЛСЯ С ДОКУМЕНТАЦИЕЙ HIGH LEVEL - Подключение клиента через сеть
     - протоколы подключения (HTTP/WebSocket | JavaSocket)
     - WebSocket - Jetty https://www.eclipse.org/jetty/documentation/9.4.x/index.html (start server, start client, read about web socket)
     

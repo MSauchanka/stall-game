@@ -1,8 +1,8 @@
-package stallgame.item.key;
+package stallgame.door.key;
 
 public class WrongKeyException extends RuntimeException {
 
-    public WrongKeyException() {
+    protected WrongKeyException() {
         super("You are trying to use wrong key!");
     }
 

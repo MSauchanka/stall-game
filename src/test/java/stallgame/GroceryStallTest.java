@@ -6,13 +6,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
-import stallgame.item.key.Key;
-import stallgame.item.key.Lock;
-import stallgame.item.product.Product;
-import stallgame.item.product.ProductTypes;
-
-import java.util.ArrayList;
-import java.util.List;
+import stallgame.door.DoorClosedException;
+import stallgame.door.key.Key;
 
 import static stallgame.Constants.*;
 
@@ -23,36 +18,38 @@ public class GroceryStallTest {
 
     @Test
     public void leaveByDoor() {
-        GroceryStall groceryStall = new GroceryStall();
+        World world = World.create();
+        GroceryStall groceryStall = GroceryStall.createWith(world);
         NonPlayableCharacter npc = new NonPlayableCharacter();
         npc.setRole(Role.SELLER);
         npc.getInventory().add(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION));
         PlayableCharacter mainChar = new PlayableCharacter(npc);
-        mainChar.npc.enterStall(groceryStall.getMainDoor());
-        Assert.assertEquals(1, groceryStall.visitors.size());
-        mainChar.npc.leaveStall(groceryStall.getMainDoor());
-        Assert.assertEquals(0, groceryStall.visitors.size());
+        mainChar.npc.enter(groceryStall.getMainDoor());
+        Assert.assertEquals(1, groceryStall.getVisitors().size());
+        mainChar.npc.leave(groceryStall.getMainDoor());
+        Assert.assertEquals(0, groceryStall.getVisitors().size());
     }
 
     @Test
     public void leaveByDoorVisitor() {
-        expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Sorry door is closed!");
+        expectedEx.expect(DoorClosedException.class);
+        expectedEx.expectMessage("Sorry! Door is closed!");
 
-        GroceryStall groceryStall = new GroceryStall();
+        World world = World.create();
+        GroceryStall groceryStall = GroceryStall.createWith(world);
         NonPlayableCharacter visitor = new NonPlayableCharacter();
-        visitor.enterStall(groceryStall.getMainDoor());
+        visitor.enter(groceryStall.getMainDoor());
     }
 
     @Test
     public void toCashierPlaceOutside() {
-        expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Enter the stall to take cashier place!");
+        expectedEx.expect(DoorClosedException.class);
+        expectedEx.expectMessage("Sorry! Door is closed!");
 
-        GroceryStall groceryStall = new GroceryStall();
+        World world = World.create();
         NonPlayableCharacter npc = new NonPlayableCharacter();
         PlayableCharacter mainChar = new PlayableCharacter(npc);
-        mainChar.npc.enterCashierPlace(groceryStall.getCashierPlace());
+        mainChar.npc.enter(world.groceryStall.getCashierPlace().getDoor());
     }
 
 

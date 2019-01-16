@@ -8,37 +8,37 @@ public enum Actions {
     ENTER_STALL {
         @Override
         public void execute(NonPlayableCharacter npc, World world) {
-            npc.enterStall(world.groceryStall.getMainDoor());
+            npc.enter(world.groceryStall.getMainDoor());
         }
     },
     LEAVE_STALL {
         @Override
         public void execute(NonPlayableCharacter npc, World world) {
-            npc.leaveStall(world.groceryStall.getMainDoor());
+            npc.leave(world.groceryStall.getMainDoor());
         }
     },
     LEAVE_AND_LOCK_STALL {
         @Override
         public void execute(NonPlayableCharacter npc, World world) {
-            npc.leaveAndLockStall(world.groceryStall.getMainDoor());
+            npc.leaveAndLock(world.groceryStall.getMainDoor());
         }
     },
     BECOME_SELLER {
         @Override
         public void execute(NonPlayableCharacter npc, World world) {
-            npc.enterCashierPlace(world.groceryStall.getCashierPlace());
+            npc.enter(world.groceryStall.getCashierPlace().getDoor());
         }
     },
     LEAVE_SELLER_PLACE {
         @Override
         public void execute(NonPlayableCharacter npc, World world) {
-            npc.leaveCashierPlace(world.groceryStall.getCashierPlace());
+            npc.leave(world.groceryStall.getCashierPlace().getDoor());
         }
     },
     LEAVE_AND_LOCK_SELLER_PLACE {
         @Override
         public void execute(NonPlayableCharacter npc, World world) {
-            npc.leaveAndLockCashierPlace(world.groceryStall.getCashierPlace());
+            npc.leaveAndLock(world.groceryStall.getCashierPlace().getDoor());
         }
     },
     BUY {

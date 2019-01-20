@@ -1,5 +1,5 @@
 ## Known issues
 
-- NPC with status VISITOR > groceryStall.MAX_VISITORS
-- The same SELLER stock in role
-- Check NPC count
+- Done - NPC with status VISITOR > groceryStall.MAX_VISITORS
+- Done - The same SELLER stock in role
+- Done - Check NPC count 

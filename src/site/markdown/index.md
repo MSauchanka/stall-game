@@ -5,11 +5,13 @@
 работать вподряд и где ночевать. Работа или дом. Во сколько открываться закрываться. Решать общаться с покупателями или 
 нет, обсчитывать или нет и т д.
 
+<!--MACRO{ssi|function=include|virtual=src/site/html/World.html} -->
+
 ## Основной контейнер World.class
 
 World содержит элементы, которыми оперирует Server для эмуляции мира игры, а также Client для участия в игровом процессе.
 
-%{snippet|id=world-1|url=file:///C:/nbcu/self/java_sessions/src/main/java/stallgame/World.java}
+<!--MACRO{snippet|id=world-1|file=src/main/java/stallgame/World.java} -->
 
 ## Магазин GroceryStall.class
 

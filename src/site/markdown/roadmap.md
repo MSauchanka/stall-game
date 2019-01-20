@@ -25,6 +25,16 @@
     // private RestPlace restPlace;
     // private StallWindow stallWindow;
     // private StallQueue stallQueue;
+    
+
+- Сквозной счетчик
+
+- Добавить сервер WebSocket Jetty в Server и запустить
+- Добавить клиент WebSocket Jetty в Client и присоединиться
+- Добавить тест (в тесте сервер в отдельном потоке) клиент будет выполняться команды в рамках теста
+
+
+- Почитать про creation patterns https://en.wikipedia.org/wiki/Creational_pattern
 
 ## Done
 
@@ -82,6 +92,11 @@ Jan, 16
     - протоколы подключения (HTTP/WebSocket | JavaSocket)
     - WebSocket - Jetty https://www.eclipse.org/jetty/documentation/9.4.x/index.html (start server, start client, read about web socket)
     
+Jan, 18
 
+- Container to Area - done
+- Portal added
+- Bugs fixed
+- Overall count - workaround
 
  

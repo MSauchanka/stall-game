@@ -1,6 +1,6 @@
 package stallgame;
 
-import stallgame.container.Container;
+import stallgame.area.Area;
 import stallgame.door.Door;
 import stallgame.door.key.Lock;
 import stallgame.item.product.Product;
@@ -9,7 +9,7 @@ import stallgame.stall.CashierPlace;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroceryStall extends Container {
+public class GroceryStall extends Area {
 
     private static final int MAX_STALL_VISITORS = 10;
     private static final String MAIN_DOOR_KEY = "mainDoor";

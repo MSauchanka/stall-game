@@ -1,4 +1,4 @@
-package stallgame.door;
+package stallgame.portal;
 
 public class NoPlaceToEnterException extends RuntimeException {
 

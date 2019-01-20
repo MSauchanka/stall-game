@@ -57,7 +57,6 @@ public enum Actions {
         @Override
         public void execute(NonPlayableCharacter npc, World world) {
             npc.atRole += 1;
-            System.out.println();
         }
     };
 

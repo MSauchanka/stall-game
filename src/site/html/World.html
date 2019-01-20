@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+<!-- START SNIPPET: world-net -->
 <html lang="en">
 <head>
-    <script type="text/javascript" src="../resources/vis.min.js"></script>
-    <link href="../resources/vis.min.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
 
     <style type="text/css">
         #mynetwork {
@@ -32,7 +33,7 @@
     ]);
 
     // create a network
-    var container = document.getElementById('mynetwork');
+    var area = document.getElementById('mynetwork');
 
     // provide the data in the vis format
     var data = {
@@ -53,7 +54,8 @@
 }
 
     // initialize your network!
-    var network = new vis.Network(container, data, options);
+    var network = new vis.Network(area, data, options);
 </script>
 </body>
 </html>
+<!-- END SNIPPET: world-net -->

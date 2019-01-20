@@ -14,7 +14,6 @@ import stallgame.stall.CashierPlace;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -32,9 +31,9 @@ public class Server {
     public static void main(String[] args) {
         World world = createWorld();
         // Make npc playable
-        Set<PlayableCharacter> wrappedNpc = world.getAllNpcsStream()
+        Set<PlayableCharacter> wrappedNpc = world.getVisitors().stream()
                 .map(npc -> {
-                    int count = (int) world.getAllNpcsStream().count();
+                    int count = world.getVisitors().size();
                     int selection = new Random().nextInt(count);
                     if (selection < count / 3) {
                         npc.getInventory().addAll(singletonList(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION)));
@@ -43,6 +42,7 @@ public class Server {
                     return new PlayableCharacter(npc);
                 })
                 .collect(Collectors.toSet());
+        world.wrappedNpcs = wrappedNpc;
         for (; ; ) {
             long epochSecondStart = Instant.now().toEpochMilli();
             gameLoop(world, wrappedNpc);
@@ -90,7 +90,9 @@ public class Server {
                     double avgActionWeight = (100 - originalWaitWeight) / wnpc.getActions().size();
                     LOGGER.debug("{} action {} weight: {}, wait weight: {}.", wnpc.npc.getFullName(),
                             action.toString(), avgActionWeight, originalWaitWeight);
-                    return getPairWeightedByRole(wnpc, action, avgActionWeight, originalWaitWeight);
+                    List<Actions> actions = wnpc.npc.getGoal().getActions(wnpc.npc.getRole());
+
+                    return createPair(wnpc, action, avgActionWeight, originalWaitWeight, actions);
                 })
                 .collect(Collectors.toList());
         double actionsWeightSum = pairs.stream()
@@ -100,36 +102,11 @@ public class Server {
         pairs.add(new Pair(Actions.WAIT, residualWaitWeight));
         LOGGER.debug("{} residual wait weight: {}.", wnpc.npc.getFullName(), residualWaitWeight);
 
-        return pairs;
-    }
-
-    private static Pair getPairWeightedByRole(PlayableCharacter wnpc, Actions action, double actionWeight, double waitWeight) {
-        if (Goal.TO_STALL_BUY.equals(wnpc.npc.getGoal())){
-            if (Role.NO_ROLE.equals(wnpc.npc.getRole())) {
-                List<Actions> actions = new LinkedList<>();
-                actions.add(Actions.ENTER_STALL);
-
-                return createPair(wnpc, action, actionWeight, waitWeight, actions);
-            } else if (Role.VISITOR.equals(wnpc.npc.getRole())) {
-                List<Actions> actions = new LinkedList<>();
-                actions.add(Actions.BUY);
-
-                return createPair(wnpc, action, actionWeight, waitWeight, actions);
-            }
-        } else if(Goal.TO_STALL_VISIT.equals(wnpc.npc.getGoal())) {
-            if (Role.NO_ROLE.equals(wnpc.npc.getRole())) {
-                List<Actions> actions = new LinkedList<>();
-                actions.add(Actions.ENTER_STALL);
-
-                return createPair(wnpc, action, actionWeight, waitWeight, actions);
-            }
-        } else if (Goal.TO_WORK.equals(wnpc.npc.getGoal())) {
-
-        } else if (Goal.TO_HOME.equals(wnpc.npc.getGoal())) {
-
+        if (wnpc.npc.getRole().equals(Role.VISITOR)) {
+            System.out.println();
         }
 
-        return null;
+        return pairs;
     }
 
     private static Pair createPair(PlayableCharacter wnpc, Actions action, double actionWeight, double waitWeight,
@@ -160,18 +137,14 @@ public class Server {
     }
 
     private static void printAllWorldStatus(World world) {
-        LOGGER.trace("NPC count: " + world.getAllNpcsStream().count());
+        LOGGER.trace("NPC count: " + world.wrappedNpcs.size());
         LOGGER.trace(Role.VISITOR + " count : " + world.getAllNpcsStream()
                 .filter(npc -> Role.VISITOR.equals(npc.getRole()))
                 .count());
-        LOGGER.trace("Grocery VISITORS MAP count : " + world.groceryStall.getVisitors().size());
-        LOGGER.trace(Role.SELLER + " name : " + world.getAllNpcsStream()
-                .filter(npc -> Role.SELLER.equals(npc.getRole()))
+        LOGGER.trace(Role.SELLER + " name : " + world.groceryStall.getCashierPlace().getVisitors().stream()
                 .map(NonPlayableCharacter::getFullName)
                 .findFirst().orElse("No seller at the moment!"));
-        LOGGER.trace(Role.NO_ROLE + " count : " + world.getAllNpcsStream()
-                .filter(npc -> Role.NO_ROLE.equals(npc.getRole()))
-                .count());
+        LOGGER.trace(Role.NO_ROLE + " count : " + world.getVisitors().size());
         LOGGER.trace("Grocery stall products count: " + world.groceryStall.getStorage().size());
         LOGGER.trace("Cashbox money count: " + world.groceryStall.getCashierPlace().getCashbox().countMoney());
         LOGGER.trace("Tics passed: " + world.tics);

@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
-import stallgame.door.DoorClosedException;
+import stallgame.portal.PortalClosedException;
 import stallgame.door.key.Key;
 
 import static stallgame.Constants.*;
@@ -19,21 +19,21 @@ public class GroceryStallTest {
     @Test
     public void leaveByDoor() {
         World world = World.create();
-        GroceryStall groceryStall = GroceryStall.createWith(world);
         NonPlayableCharacter npc = new NonPlayableCharacter();
         npc.setRole(Role.SELLER);
         npc.getInventory().add(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION));
-        PlayableCharacter mainChar = new PlayableCharacter(npc);
-        mainChar.npc.enter(groceryStall.getMainDoor());
-        Assert.assertEquals(1, groceryStall.getVisitors().size());
-        mainChar.npc.leave(groceryStall.getMainDoor());
-        Assert.assertEquals(0, groceryStall.getVisitors().size());
+        world.addVisitor(npc);
+        PlayableCharacter mainChar = world.operateNpc(npc);
+        mainChar.npc.enter(world.groceryStall.getMainDoor());
+        Assert.assertEquals(1, world.groceryStall.getVisitors().size());
+        mainChar.npc.leave(world.groceryStall.getMainDoor());
+        Assert.assertEquals(0, world.groceryStall.getVisitors().size());
     }
 
     @Test
     public void leaveByDoorVisitor() {
-        expectedEx.expect(DoorClosedException.class);
-        expectedEx.expectMessage("Sorry! Door is closed!");
+        expectedEx.expect(PortalClosedException.class);
+        expectedEx.expectMessage("Closed! Sorry!");
 
         World world = World.create();
         GroceryStall groceryStall = GroceryStall.createWith(world);
@@ -43,8 +43,8 @@ public class GroceryStallTest {
 
     @Test
     public void toCashierPlaceOutside() {
-        expectedEx.expect(DoorClosedException.class);
-        expectedEx.expectMessage("Sorry! Door is closed!");
+        expectedEx.expect(PortalClosedException.class);
+        expectedEx.expectMessage("Closed! Sorry!");
 
         World world = World.create();
         NonPlayableCharacter npc = new NonPlayableCharacter();

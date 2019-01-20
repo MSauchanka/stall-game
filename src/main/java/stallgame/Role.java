@@ -2,6 +2,6 @@ package stallgame;
 
 public enum Role {
 
-    SELLER, BUYER, VISITOR, NO_ROLE, PASSENGER, WORKER, VAGRANT
+    NO_ROLE, PASSENGER, VAGRANT, VISITOR, BUYER, WORKER, SELLER
 
 }

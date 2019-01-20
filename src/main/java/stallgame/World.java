@@ -2,17 +2,19 @@ package stallgame;
 
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
-import stallgame.container.Container;
+import stallgame.area.Area;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
-public class World extends Container {
+public class World extends Area {
 
     private static final int MAX_WORLD_VISITORS = 100;
 
     // START SNIPPET: world-1
     public GroceryStall groceryStall;
     public PlayableCharacter mainChar;
+    public Set<PlayableCharacter> wrappedNpcs;
     // END SNIPPET: world-1
 
     public int serverFramesFrequency = 24;

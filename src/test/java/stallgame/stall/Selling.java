@@ -30,6 +30,7 @@ public class Selling {
         world.mainChar.npc.getInventory().add(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION));
         world.mainChar.npc.getInventory().add(new Key(CashierPlace.CASHIER_PLACE_LOCK, CASHIER_PLACE_KEY_DESCRIPTION));
         NonPlayableCharacter visitor = new NonPlayableCharacter();
+        world.addVisitor(visitor);
         List<Product> products = singletonList(new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION));
 
         world.groceryStall.loadProducts(products);

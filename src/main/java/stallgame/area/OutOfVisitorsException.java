@@ -1,4 +1,4 @@
-package stallgame.container;
+package stallgame.area;
 
 public class OutOfVisitorsException extends RuntimeException {
 

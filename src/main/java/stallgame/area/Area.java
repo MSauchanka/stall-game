@@ -1,4 +1,4 @@
-package stallgame.container;
+package stallgame.area;
 
 import stallgame.Role;
 import stallgame.character.NonPlayableCharacter;
@@ -6,14 +6,14 @@ import stallgame.character.NonPlayableCharacter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Container {
+public class Area {
 
     private int maxVisitorsCount;
     private Role role;
 
     private List<NonPlayableCharacter> visitors = new ArrayList<>();
 
-    public Container(int maxVisitorsCount, Role role) {
+    public Area(int maxVisitorsCount, Role role) {
         this.maxVisitorsCount = maxVisitorsCount;
         this.role = role;
     }
@@ -31,7 +31,6 @@ public class Container {
         if (!visitors.remove(npc)) {
             throw new OutOfVisitorsException();
         }
-        npc.setRole(Role.NO_ROLE);
     }
 
     public List<NonPlayableCharacter> getVisitors() {

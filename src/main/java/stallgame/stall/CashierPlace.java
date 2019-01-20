@@ -3,7 +3,7 @@ package stallgame.stall;
 import stallgame.GroceryStall;
 import stallgame.Role;
 import stallgame.character.NonPlayableCharacter;
-import stallgame.container.Container;
+import stallgame.area.Area;
 import stallgame.door.Door;
 import stallgame.door.key.Lock;
 import stallgame.item.product.Product;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class CashierPlace extends Container {
+public class CashierPlace extends Area {
 
     public static final String CASHIER_PLACE_LOCK = "cashierPlaceLock";
     private static final int CASHIER_PLACE_MAX_VISITORS = 1;
@@ -34,36 +34,6 @@ public class CashierPlace extends Container {
     private CashierPlace(int maxVisitorsCount, Role role) {
         super(maxVisitorsCount, role);
     }
-
-//    @Deprecated
-//    public void enter(NonPlayableCharacter seller) {
-//        if (null == this.seller) {
-//            door.enter(seller);
-//            this.seller = seller;
-//        } else {
-//            throw new RuntimeException(this.seller.getFullName() + " is cashier already!");
-//        }
-//    }
-
-//    @Deprecated
-//    public void leave(NonPlayableCharacter seller) {
-//        if (this.seller.equals(seller)) {
-//            door.leave(seller);
-//            this.seller = null;
-//        } else {
-//            throw new RuntimeException("You not the cashier to leave");
-//        }
-//    }
-
-//    @Deprecated
-//    public void leaveAndLock(NonPlayableCharacter seller) {
-//        if (this.seller.equals(seller)) {
-//            door.leaveAndLock(seller);
-//            this.seller = null;
-//        } else {
-//            throw new RuntimeException("You not the cashier to leave");
-//        }
-//    }
 
     public NonPlayableCharacter observe() {
         if (getVisitors().size() > 0) {

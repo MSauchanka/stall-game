@@ -1,2 +1,2 @@
-Run jar file without main class in manifest: java -cp server-1.0-SNAPSHOT.jar stallgame.Client
+Run jar file without main class in manifest: java -cp server-1.0-SNAPSHOT.jar stallgame.GameClient
 Run jar file: java -jar server-1.0-SNAPSHOT.jar

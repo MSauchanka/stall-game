@@ -2,7 +2,6 @@ package stallgame.stall.cashbox;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import stallgame.Server;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.item.product.Product;
 

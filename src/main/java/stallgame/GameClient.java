@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 import static java.util.Collections.singletonList;
 import static stallgame.Constants.*;
 
-public class Client {
+public class GameClient {
 
     public static void main(String[] args) {
         World world = World.create();

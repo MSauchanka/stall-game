@@ -24,9 +24,9 @@ import static java.util.Collections.singletonList;
 import static stallgame.Constants.*;
 import static stallgame.character.NonPlayableCharacter.MIN_AT_ROLE_TIME;
 
-public class Server {
+public class GameServer {
 
-    private static final Logger LOGGER = LogManager.getLogger(Server.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(GameServer.class.getName());
 
     public static void main(String[] args) {
         World world = createWorld();

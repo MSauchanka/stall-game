@@ -15,6 +15,8 @@ import static stallgame.Constants.*;
 
 public class GameClient {
 
+    public static World world;
+
     public static void main(String[] args) {
         World world = World.create();
         Product product = new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION);

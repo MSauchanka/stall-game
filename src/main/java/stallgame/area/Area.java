@@ -3,10 +3,11 @@ package stallgame.area;
 import stallgame.Role;
 import stallgame.character.NonPlayableCharacter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Area {
+public class Area implements Serializable {
 
     private int maxVisitorsCount;
     private Role role;

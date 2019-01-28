@@ -5,12 +5,13 @@ import stallgame.item.product.Product;
 import stallgame.item.product.ProductTypes;
 import stallgame.stall.CashierPlace;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Cashbox {
+public class Cashbox implements Serializable {
 
     private int money = 0;
     private CashierPlace cashierPlace;

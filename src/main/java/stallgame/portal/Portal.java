@@ -6,7 +6,9 @@ import stallgame.door.key.Key;
 import stallgame.door.key.Lock;
 import stallgame.door.key.WrongKeyException;
 
-public class Portal {
+import java.io.Serializable;
+
+public class Portal implements Serializable {
 
     private Lock lock;
     private Area inside;

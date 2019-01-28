@@ -99,4 +99,10 @@ Jan, 18
 - Bugs fixed
 - Overall count - workaround
 
+Jan, 27
+
+- Client & Server Jetty WebSocket - done
+- Test connection - done
+- add world reporting on java swing
+
  

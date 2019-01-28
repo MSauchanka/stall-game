@@ -1,11 +1,14 @@
 package stallgame.jetty;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.StatusCode;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import stallgame.GameClient;
+import stallgame.World;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
@@ -52,8 +55,10 @@ public class ClientSocket {
     }
 
     @OnWebSocketMessage
-    public void onMessage(String msg) {
-        System.out.printf("Got msg: %s%n", msg);
+    public void onMessage(byte[] msg, int offset, int length) {
+        System.out.printf("Got msg!");
+        GameClient.world = SerializationUtils.deserialize(msg);
+        System.out.printf("World was updated!");
     }
 
 }

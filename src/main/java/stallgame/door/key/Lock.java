@@ -1,6 +1,8 @@
 package stallgame.door.key;
 
-public class Lock {
+import java.io.Serializable;
+
+public class Lock implements Serializable {
 
     private String keyword;
     private boolean isLocked = true;

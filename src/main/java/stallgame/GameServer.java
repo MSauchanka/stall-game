@@ -11,9 +11,12 @@ import stallgame.door.key.Key;
 import stallgame.item.product.Product;
 import stallgame.item.product.ProductTypes;
 import stallgame.stall.CashierPlace;
+import stallgame.visual.MainWindow;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -26,10 +29,18 @@ import static stallgame.character.NonPlayableCharacter.MIN_AT_ROLE_TIME;
 
 public class GameServer {
 
+    public static final List<World> worlds = new LinkedList<>();
+
     private static final Logger LOGGER = LogManager.getLogger(GameServer.class.getName());
 
     public static void main(String[] args) {
         World world = createWorld();
+        worlds.add(world);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                MainWindow.showWorldReport(GameServer.worlds.get(0));
+            }
+        });
         // Make npc playable
         Set<PlayableCharacter> wrappedNpc = world.getVisitors().stream()
                 .map(npc -> {
@@ -61,6 +72,15 @@ public class GameServer {
         }
     }
 
+    public static World createWorld() {
+        World world = World.create();
+        Product product = new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION);
+        IntStream.range(0, 50).forEach(idx -> world.groceryStall.loadProducts(singletonList(product)));
+        IntStream.range(0, 50).forEach(idx -> world.addVisitor(new NonPlayableCharacter()));
+
+        return world;
+    }
+
     private static void gameLoop(World world, Set<PlayableCharacter> wrappedNpc) {
         wrappedNpc.forEach(wnpc -> {
             int selection = new Random().nextInt(wnpc.getActions().size());
@@ -79,8 +99,6 @@ public class GameServer {
                 LOGGER.error(e.getMessage());
             }
         });
-        clearConsole();
-        printAllWorldStatus(world);
     }
 
     private static List<Pair> createWeightPairs(PlayableCharacter wnpc) {
@@ -124,16 +142,6 @@ public class GameServer {
         LOGGER.debug("{} UPDATED action {} weight: {}.", wnpc.npc.getFullName(), action.toString(), actionWeight);
 
         return new Pair(action, actionWeight);
-    }
-
-
-    private static World createWorld() {
-        World world = World.create();
-        Product product = new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION);
-        IntStream.range(0, 50).forEach(idx -> world.groceryStall.loadProducts(singletonList(product)));
-        IntStream.range(0, 50).forEach(idx -> world.addVisitor(new NonPlayableCharacter()));
-
-        return world;
     }
 
     private static void printAllWorldStatus(World world) {

@@ -5,6 +5,7 @@ import stallgame.Role;
 import stallgame.action.Actions;
 import stallgame.item.Item;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -12,9 +13,10 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
-public class PlayableCharacter {
+public class PlayableCharacter implements Serializable {
 
     public NonPlayableCharacter npc;
+    public boolean isClientControl;
 
     public PlayableCharacter(NonPlayableCharacter npc) {
         this.npc = npc;

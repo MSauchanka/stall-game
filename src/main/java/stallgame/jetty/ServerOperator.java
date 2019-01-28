@@ -6,27 +6,24 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 public class ServerOperator {
 
+    public static volatile boolean isServerStarted = false;
+
     public static void runServer(int port) {
 
         Server server = new Server(port);
 
-        WebSocketHandler wsHandler = new WebSocketHandler()
-        {
+        WebSocketHandler wsHandler = new WebSocketHandler() {
             @Override
-            public void configure(WebSocketServletFactory factory)
-            {
-                factory.register(MyWebSocketHandler.class);
+            public void configure(WebSocketServletFactory factory) {
+                factory.register(ServerSocket.class);
             }
         };
 
-        try
-        {
+        try {
             server.setHandler(wsHandler);
             server.start();
-            server.join();
-        }
-        catch (Exception e)
-        {
+            isServerStarted = "STARTED".equals(server.getState());
+        } catch (Exception e) {
             System.err.println("Exception caught when running server:" + e.getMessage());
             e.printStackTrace();
         }

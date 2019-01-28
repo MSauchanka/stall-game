@@ -20,8 +20,6 @@ public class World extends Area {
     public int serverFramesFrequency = 24;
     public long tics = 0;
 
-
-
     public static World create() {
         return new World(MAX_WORLD_VISITORS, Role.NO_ROLE).addGroceryStall();
     }
@@ -45,4 +43,6 @@ public class World extends Area {
 
         return this;
     }
+
+
 }

@@ -14,6 +14,7 @@ import stallgame.stall.cashbox.Cashbox;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,7 +24,7 @@ import static java.util.Collections.singletonList;
 import static stallgame.Constants.MEAT_FOOD;
 import static stallgame.Constants.MEAT_FOOD_DESCRIPTION;
 
-public class NonPlayableCharacter {
+public class NonPlayableCharacter implements Serializable {
 
     private static final Logger LOGGER = LogManager.getLogger(NonPlayableCharacter.class.getName());
     public static final int VISITOR_ON_SPAWN_MONEY_AMOUNT = 10;

@@ -120,10 +120,6 @@ public class GameServer {
         pairs.add(new Pair(Actions.WAIT, residualWaitWeight));
         LOGGER.debug("{} residual wait weight: {}.", wnpc.npc.getFullName(), residualWaitWeight);
 
-        if (wnpc.npc.getRole().equals(Role.VISITOR)) {
-            System.out.println();
-        }
-
         return pairs;
     }
 

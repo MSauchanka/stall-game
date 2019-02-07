@@ -1,7 +1,5 @@
 package stallgame.visual;
 
-import stallgame.World;
-
 import javax.swing.*;
 
 public class MainWindow extends JFrame {
@@ -13,9 +11,9 @@ public class MainWindow extends JFrame {
         setVisible(true);
     }
 
-    public static void showWorldReport(World world) {
+    public static void showWorldReport() {
         MainWindow window = new MainWindow();
         window.setTitle("World Reporter");
-        window.add(new WorldStatusField(world));
+        window.add(new WorldStatusField());
     }
 }

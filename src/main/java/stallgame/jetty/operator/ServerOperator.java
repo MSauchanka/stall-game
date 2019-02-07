@@ -1,8 +1,9 @@
-package stallgame.jetty;
+package stallgame.jetty.operator;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+import stallgame.jetty.socket.ServerSocket;
 
 public class ServerOperator {
 
@@ -23,6 +24,7 @@ public class ServerOperator {
             server.setHandler(wsHandler);
             server.start();
             isServerStarted = "STARTED".equals(server.getState());
+            server.join();
         } catch (Exception e) {
             System.err.println("Exception caught when running server:" + e.getMessage());
             e.printStackTrace();

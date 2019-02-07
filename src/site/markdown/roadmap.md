@@ -29,9 +29,8 @@
 
 - Сквозной счетчик
 
-- Добавить сервер WebSocket Jetty в Server и запустить
-- Добавить клиент WebSocket Jetty в Client и присоединиться
-- Добавить тест (в тесте сервер в отдельном потоке) клиент будет выполняться команды в рамках теста
+- Добавить в репортер список подключенных клиентов
+- https://www.heroku.com/java фришный сервер для java приложений
 
 
 - Почитать про creation patterns https://en.wikipedia.org/wiki/Creational_pattern
@@ -105,4 +104,7 @@ Jan, 27
 - Test connection - done
 - add world reporting on java swing
 
+Feb, 5
+
+-
  

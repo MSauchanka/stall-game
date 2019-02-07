@@ -1,16 +1,22 @@
-package stallgame.jetty;
+package stallgame.jetty.operator;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
+import stallgame.jetty.socket.ClientSocket;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 public class ClientOperator {
 
+    public static WebSocketClient client;
+    private static final Logger LOGGER = LogManager.getLogger(ClientSocket.class.getName());
+
     public static void connect(String uri) {
-        System.out.println("Start connect method");
-        WebSocketClient client = new WebSocketClient();
+        LOGGER.debug("Start connect method");
+        client = new WebSocketClient();
         ClientSocket socket = new ClientSocket();
 
         try {
@@ -19,18 +25,9 @@ public class ClientOperator {
             ClientUpgradeRequest request = new ClientUpgradeRequest();
             client.connect(socket, echoUri, request);
 
-            System.out.printf("Connecting to : %s%n", echoUri);
-
-            // wait for closed socket connection.
-            socket.awaitClose(5, TimeUnit.SECONDS);
+            LOGGER.debug("Connecting to : " + echoUri);
         } catch (Throwable t) {
             t.printStackTrace();
-        } finally {
-            try {
-                client.stop();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 }

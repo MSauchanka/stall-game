@@ -11,17 +11,21 @@ public class World extends Area {
 
     private static final int MAX_WORLD_VISITORS = 100;
 
-    // START SNIPPET: world-1
+    // START SNIPPET: worldLocal-1
     public GroceryStall groceryStall;
     public PlayableCharacter mainChar;
     public Set<PlayableCharacter> wrappedNpcs;
-    // END SNIPPET: world-1
+    // END SNIPPET: worldLocal-1
 
     public int serverFramesFrequency = 24;
     public long tics = 0;
 
     public static World create() {
         return new World(MAX_WORLD_VISITORS, Role.NO_ROLE).addGroceryStall();
+    }
+
+    public static World createEmpty() {
+        return new World(MAX_WORLD_VISITORS, Role.NO_ROLE);
     }
 
     private World(int maxVisitorsCount, Role role) {

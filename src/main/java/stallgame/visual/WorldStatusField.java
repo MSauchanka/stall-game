@@ -11,10 +11,9 @@ import java.awt.event.ActionListener;
 
 public class WorldStatusField extends JPanel implements ActionListener {
 
-    private World world;
+    public static World world;
 
-    public WorldStatusField(World world) {
-        this.world = world;
+    public WorldStatusField() {
         Timer timer = new Timer(250, this);
         timer.start();
     }
@@ -28,17 +27,22 @@ public class WorldStatusField extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.drawString("NPC count: " + world.wrappedNpcs.size(), 5, 15);
-        g.drawString(Role.VISITOR + " count : " + world.getAllNpcsStream()
-                .filter(npc -> Role.VISITOR.equals(npc.getRole()))
-                .count(), 5, 30);
-        g.drawString(Role.SELLER + " name : " + world.groceryStall.getCashierPlace().getVisitors().stream()
-                .map(NonPlayableCharacter::getFullName)
-                .findFirst().orElse("No seller at the moment!"), 5, 45);
-        g.drawString(Role.NO_ROLE + " count : " + world.getVisitors().size(), 5, 60);
-        g.drawString("Grocery stall products count: " + world.groceryStall.getStorage().size(), 5, 75);
-        g.drawString("Cashbox money count: " + world.groceryStall.getCashierPlace().getCashbox().countMoney(), 5, 90);
-        g.drawString("Tics passed: " + world.tics, 5, 105);
+        if (null != world) {
+            g.drawString("NPC count: " + world.wrappedNpcs.size(), 5, 15);
+            g.drawString(Role.VISITOR + " count : " + world.getAllNpcsStream()
+                    .filter(npc -> Role.VISITOR.equals(npc.getRole()))
+                    .count(), 5, 30);
+            g.drawString(Role.SELLER + " name : " + world.groceryStall.getCashierPlace().getVisitors().stream()
+                    .map(NonPlayableCharacter::getFullName)
+                    .findFirst().orElse("No seller at the moment!"), 5, 45);
+            g.drawString(Role.NO_ROLE + " count : " + world.getVisitors().size(), 5, 60);
+            g.drawString("Grocery stall products count: " + world.groceryStall.getStorage().size(), 5, 75);
+            g.drawString("Cashbox money count: " + world.groceryStall.getCashierPlace().getCashbox().countMoney(), 5, 90);
+            g.drawString("Tics passed: " + world.tics, 5, 105);
+        } else {
+            g.drawString("Waiting for client connection to start!", 5, 15);
+        }
+
     }
 
     @Override

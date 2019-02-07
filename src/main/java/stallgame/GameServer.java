@@ -10,16 +10,16 @@ import stallgame.character.PlayableCharacter;
 import stallgame.door.key.Key;
 import stallgame.item.product.Product;
 import stallgame.item.product.ProductTypes;
+import stallgame.jetty.operator.ServerOperator;
+import stallgame.jetty.socket.ServerSocket;
 import stallgame.stall.CashierPlace;
 import stallgame.visual.MainWindow;
+import stallgame.visual.WorldStatusField;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -30,17 +30,14 @@ import static stallgame.character.NonPlayableCharacter.MIN_AT_ROLE_TIME;
 public class GameServer {
 
     public static final List<World> worlds = new LinkedList<>();
+    public static final List<ServerSocket> serverSockets = new ArrayList<>();
 
     private static final Logger LOGGER = LogManager.getLogger(GameServer.class.getName());
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         World world = createWorld();
         worlds.add(world);
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                MainWindow.showWorldReport(GameServer.worlds.get(0));
-            }
-        });
+        SwingUtilities.invokeLater(() -> MainWindow.showWorldReport());
         // Make npc playable
         Set<PlayableCharacter> wrappedNpc = world.getVisitors().stream()
                 .map(npc -> {
@@ -54,9 +51,22 @@ public class GameServer {
                 })
                 .collect(Collectors.toSet());
         world.wrappedNpcs = wrappedNpc;
+        new Thread(() -> ServerOperator.runServer(9009)).start();
+        while (serverSockets.isEmpty()) {
+            Thread.sleep(1000);
+        }
         for (; ; ) {
             long epochSecondStart = Instant.now().toEpochMilli();
             gameLoop(world, wrappedNpc);
+            if (!serverSockets.isEmpty()) {
+                for (ServerSocket s:serverSockets) {
+                    s.sendWorldInstance(world);
+                }
+            } else {
+                while (serverSockets.isEmpty()) {
+                    Thread.sleep(1000);
+                }
+            }
             long epochSecondEnd = Instant.now().toEpochMilli();
             // Calculate amount of millisec required for one frame.
             // If game loop execution took less, then wait.
@@ -69,6 +79,7 @@ public class GameServer {
                 }
             }
             world.tics += 1;
+            WorldStatusField.world = world;
         }
     }
 

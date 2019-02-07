@@ -17,7 +17,7 @@ public class GameClient {
     private static final Logger LOGGER = LogManager.getLogger(GameClient.class.getName());
 
     public static void main(String[] args) throws InterruptedException {
-        ClientOperator.connect("ws://localhost:9009");
+        ClientOperator.connect("ws://calls-game.herokuapp.com/");
         while (null == worldServer) {
             Thread.sleep(1000);
         }

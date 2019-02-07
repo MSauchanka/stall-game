@@ -37,7 +37,7 @@ public class GameServer {
     public static void main(String[] args) throws InterruptedException {
         World world = createWorld();
         worlds.add(world);
-        SwingUtilities.invokeLater(() -> MainWindow.showWorldReport());
+//        SwingUtilities.invokeLater(() -> MainWindow.showWorldReport());
         // Make npc playable
         Set<PlayableCharacter> wrappedNpc = world.getVisitors().stream()
                 .map(npc -> {
@@ -52,9 +52,11 @@ public class GameServer {
                 .collect(Collectors.toSet());
         world.wrappedNpcs = wrappedNpc;
         new Thread(() -> ServerOperator.runServer(9009)).start();
+        LOGGER.trace("Server started. Waiting for client!");
         while (serverSockets.isEmpty()) {
             Thread.sleep(1000);
         }
+        LOGGER.trace("Client connected!");
         for (; ; ) {
             long epochSecondStart = Instant.now().toEpochMilli();
             gameLoop(world, wrappedNpc);

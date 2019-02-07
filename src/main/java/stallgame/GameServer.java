@@ -51,8 +51,9 @@ public class GameServer {
                 })
                 .collect(Collectors.toSet());
         world.wrappedNpcs = wrappedNpc;
-        new Thread(() -> ServerOperator.runServer(9009)).start();
-        LOGGER.trace("Server started. Waiting for client!");
+        String port = null != System.getProperty("serverPort") ? System.getProperty("serverPort") : "9009";
+        new Thread(() -> ServerOperator.runServer(Integer.parseInt(port))).start();
+        LOGGER.trace("Server started on port: " + port + ". Waiting for client!");
         while (serverSockets.isEmpty()) {
             Thread.sleep(1000);
         }

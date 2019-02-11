@@ -15,9 +15,10 @@ public class GameClient {
     public static ClientSocket clientSocket;
 
     private static final Logger LOGGER = LogManager.getLogger(GameClient.class.getName());
+    private static final String host = null != System.getProperty("serverHost") ? System.getProperty("serverHost") : "localhost:9009";
 
     public static void main(String[] args) throws InterruptedException {
-        ClientOperator.connect("ws://calls-game.herokuapp.com/");
+        ClientOperator.connect("ws://" + host);
         while (null == worldServer) {
             Thread.sleep(1000);
         }

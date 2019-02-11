@@ -23,6 +23,7 @@ public class ServerSocket {
     public void onClose(int statusCode, String reason) {
         LOGGER.debug("Close: statusCode=" + statusCode + ", reason=" + reason);
         GameServer.serverSockets.remove(this);
+        GameServer.worldByServerSocket.remove(this);
     }
 
     @OnWebSocketError
@@ -36,6 +37,9 @@ public class ServerSocket {
         try {
             this.session = session;
             GameServer.serverSockets.add(this);
+            World world = GameServer.createWorld();
+            world.wrappedNpcs = GameServer.wrapNpcs(world);
+            GameServer.worldByServerSocket.put(this, world);
             session.getRemote().sendString("Hello Webbrowser");
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,5 +60,9 @@ public class ServerSocket {
             LOGGER.debug("Exception in send worldLocal methods: " + Arrays.toString(e.getStackTrace()));
 
         }
+    }
+
+    public Session getSession() {
+        return session;
     }
 }

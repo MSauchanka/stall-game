@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 public class World extends Area {
 
+    public static int serverFramesFrequency = 24;
     private static final int MAX_WORLD_VISITORS = 100;
 
     // START SNIPPET: worldLocal-1
@@ -17,7 +18,6 @@ public class World extends Area {
     public Set<PlayableCharacter> wrappedNpcs;
     // END SNIPPET: worldLocal-1
 
-    public int serverFramesFrequency = 24;
     public long tics = 0;
 
     public static World create() {

@@ -20,6 +20,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,58 +32,46 @@ public class GameServer {
 
     public static final List<World> worlds = new LinkedList<>();
     public static final List<ServerSocket> serverSockets = new ArrayList<>();
+    public static final Map<ServerSocket, World> worldByServerSocket = new ConcurrentHashMap<>();
 
     private static final Logger LOGGER = LogManager.getLogger(GameServer.class.getName());
+    private static final String port = null != System.getProperty("serverPort") ? System.getProperty("serverPort") : "9009";
 
     public static void main(String[] args) throws InterruptedException {
-        World world = createWorld();
-        worlds.add(world);
-//        SwingUtilities.invokeLater(() -> MainWindow.showWorldReport());
-        // Make npc playable
-        Set<PlayableCharacter> wrappedNpc = world.getVisitors().stream()
-                .map(npc -> {
-                    int count = world.getVisitors().size();
-                    int selection = new Random().nextInt(count);
-                    if (selection < count / 3) {
-                        npc.getInventory().addAll(singletonList(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION)));
-                        npc.getInventory().addAll(singletonList(new Key(CashierPlace.CASHIER_PLACE_LOCK, CASHIER_PLACE_KEY_DESCRIPTION)));
-                    }
-                    return new PlayableCharacter(npc);
-                })
-                .collect(Collectors.toSet());
-        world.wrappedNpcs = wrappedNpc;
-        String port = null != System.getProperty("serverPort") ? System.getProperty("serverPort") : "9009";
         new Thread(() -> ServerOperator.runServer(Integer.parseInt(port))).start();
         LOGGER.trace("Server started on port: " + port + ". Waiting for client!");
         while (serverSockets.isEmpty()) {
             Thread.sleep(1000);
         }
         LOGGER.trace("Client connected!");
+
         for (; ; ) {
-            long epochSecondStart = Instant.now().toEpochMilli();
-            gameLoop(world, wrappedNpc);
-            if (!serverSockets.isEmpty()) {
-                for (ServerSocket s:serverSockets) {
-                    s.sendWorldInstance(world);
-                }
-            } else {
-                while (serverSockets.isEmpty()) {
-                    Thread.sleep(1000);
-                }
-            }
-            long epochSecondEnd = Instant.now().toEpochMilli();
-            // Calculate amount of millisec required for one frame.
-            // If game loop execution took less, then wait.
-            long delay = 1000 / world.serverFramesFrequency - (epochSecondEnd - epochSecondStart);
-            if (delay > 0) {
+            while (!worldByServerSocket.isEmpty()) {
                 try {
-                    Thread.sleep(delay);
-                } catch (InterruptedException e) {
+                    worldByServerSocket.entrySet().forEach(entry -> {
+                        if (entry.getKey().getSession().isOpen()) {
+                            Set<PlayableCharacter> wrappedNpc = entry.getValue().wrappedNpcs;
+                            long epochSecondStart = Instant.now().toEpochMilli();
+                            gameLoop(entry.getValue(), wrappedNpc);
+                            entry.getKey().sendWorldInstance(entry.getValue());
+                            long epochSecondEnd = Instant.now().toEpochMilli();
+                            // Calculate amount of millisec required for one frame.
+                            // If game loop execution took less, then wait.
+                            long delay = 1000 / World.serverFramesFrequency - (epochSecondEnd - epochSecondStart);
+                            if (delay > 0) {
+                                try {
+                                    Thread.sleep(delay);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            entry.getValue().tics += 1;
+                        }
+                    });
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            world.tics += 1;
-            WorldStatusField.world = world;
         }
     }
 
@@ -93,6 +82,20 @@ public class GameServer {
         IntStream.range(0, 50).forEach(idx -> world.addVisitor(new NonPlayableCharacter()));
 
         return world;
+    }
+
+    public static Set<PlayableCharacter> wrapNpcs(World world) {
+        return world.getVisitors().stream()
+                .map(npc -> {
+                    int count = world.getVisitors().size();
+                    int selection = new Random().nextInt(count);
+                    if (selection < count / 3) {
+                        npc.getInventory().addAll(singletonList(new Key(MAIN_DOOR_LOCK, MAIN_DOOR_KEY_DESCRIPTION)));
+                        npc.getInventory().addAll(singletonList(new Key(CashierPlace.CASHIER_PLACE_LOCK, CASHIER_PLACE_KEY_DESCRIPTION)));
+                    }
+                    return new PlayableCharacter(npc);
+                })
+                .collect(Collectors.toSet());
     }
 
     private static void gameLoop(World world, Set<PlayableCharacter> wrappedNpc) {
@@ -152,29 +155,5 @@ public class GameServer {
         LOGGER.debug("{} UPDATED action {} weight: {}.", wnpc.npc.getFullName(), action.toString(), actionWeight);
 
         return new Pair(action, actionWeight);
-    }
-
-    private static void printAllWorldStatus(World world) {
-        LOGGER.trace("NPC count: " + world.wrappedNpcs.size());
-        LOGGER.trace(Role.VISITOR + " count : " + world.getAllNpcsStream()
-                .filter(npc -> Role.VISITOR.equals(npc.getRole()))
-                .count());
-        LOGGER.trace(Role.SELLER + " name : " + world.groceryStall.getCashierPlace().getVisitors().stream()
-                .map(NonPlayableCharacter::getFullName)
-                .findFirst().orElse("No seller at the moment!"));
-        LOGGER.trace(Role.NO_ROLE + " count : " + world.getVisitors().size());
-        LOGGER.trace("Grocery stall products count: " + world.groceryStall.getStorage().size());
-        LOGGER.trace("Cashbox money count: " + world.groceryStall.getCashierPlace().getCashbox().countMoney());
-        LOGGER.trace("Tics passed: " + world.tics);
-    }
-
-    private static void clearConsole() {
-        try {
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

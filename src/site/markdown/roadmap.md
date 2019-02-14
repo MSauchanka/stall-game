@@ -27,10 +27,12 @@
     // private StallQueue stallQueue;
     
 
-- Сквозной счетчик
+- UI для клиента с выбором - Создать мир или Подключиться к существующему + у существующего количество клиентов
+    - Коммуникация при помощи json
+    - UI зависит от ответа сервера
 
-- Добавить в репортер список подключенных клиентов
-- https://www.heroku.com/java фришный сервер для java приложений
+- Многопоточность через Executor (снаружи while for game loop)
+
 
 
 - Почитать про creation patterns https://en.wikipedia.org/wiki/Creational_pattern

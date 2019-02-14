@@ -4,6 +4,7 @@ import org.apache.commons.math3.distribution.EnumeratedDistribution;
 import org.apache.commons.math3.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.util.thread.ExecutorThreadPool;
 import stallgame.action.Actions;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
@@ -20,7 +21,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,40 +40,14 @@ public class GameServer {
 
     public static void main(String[] args) throws InterruptedException {
         new Thread(() -> ServerOperator.runServer(Integer.parseInt(port))).start();
+        ExecutorService executorService = Executors.newFixedThreadPool(8);
         LOGGER.trace("Server started on port: " + port + ". Waiting for client!");
         while (serverSockets.isEmpty()) {
             Thread.sleep(1000);
         }
         LOGGER.trace("Client connected!");
 
-        for (; ; ) {
-            while (!worldByServerSocket.isEmpty()) {
-                try {
-                    worldByServerSocket.entrySet().forEach(entry -> {
-                        if (entry.getKey().getSession().isOpen()) {
-                            Set<PlayableCharacter> wrappedNpc = entry.getValue().wrappedNpcs;
-                            long epochSecondStart = Instant.now().toEpochMilli();
-                            gameLoop(entry.getValue(), wrappedNpc);
-                            entry.getKey().sendWorldInstance(entry.getValue());
-                            long epochSecondEnd = Instant.now().toEpochMilli();
-                            // Calculate amount of millisec required for one frame.
-                            // If game loop execution took less, then wait.
-                            long delay = 1000 / World.serverFramesFrequency - (epochSecondEnd - epochSecondStart);
-                            if (delay > 0) {
-                                try {
-                                    Thread.sleep(delay);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            entry.getValue().tics += 1;
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        executorService.execute(new WorldLoop());
     }
 
     public static World createWorld() {
@@ -98,7 +73,7 @@ public class GameServer {
                 .collect(Collectors.toSet());
     }
 
-    private static void gameLoop(World world, Set<PlayableCharacter> wrappedNpc) {
+    public static void gameLoop(World world, Set<PlayableCharacter> wrappedNpc) {
         wrappedNpc.forEach(wnpc -> {
             int selection = new Random().nextInt(wnpc.getActions().size());
             LOGGER.info(wnpc.npc.getFullName() + " selection: " + selection);

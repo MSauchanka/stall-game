@@ -1,9 +1,14 @@
 package stallgame;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.junit.Assert;
 import org.junit.Test;
 import stallgame.jetty.operator.ClientOperator;
 import stallgame.jetty.operator.ServerOperator;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ClientServerTest {
 
@@ -28,5 +33,11 @@ public class ClientServerTest {
         Assert.assertNotEquals(null, GameClient.worldServer);
     }
 
+    @Test
+    public void tst() {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("tst", true);
+        System.out.println(obj.get("tst"));
+    }
 
 }

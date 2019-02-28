@@ -5,6 +5,7 @@ import stallgame.character.PlayableCharacter;
 import stallgame.area.Area;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public class World extends Area {
@@ -19,6 +20,7 @@ public class World extends Area {
     // END SNIPPET: worldLocal-1
 
     public long tics = 0;
+    public UUID uuid = UUID.randomUUID();
 
     public static World create() {
         return new World(MAX_WORLD_VISITORS, Role.NO_ROLE).addGroceryStall();

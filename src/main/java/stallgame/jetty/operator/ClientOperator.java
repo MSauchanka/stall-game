@@ -7,7 +7,6 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 import stallgame.jetty.socket.ClientSocket;
 
 import java.net.URI;
-import java.util.concurrent.TimeUnit;
 
 public class ClientOperator {
 

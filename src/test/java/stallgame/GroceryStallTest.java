@@ -6,10 +6,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
-import stallgame.portal.PortalClosedException;
 import stallgame.door.key.Key;
+import stallgame.portal.PortalClosedException;
 
-import static stallgame.Constants.*;
+import static stallgame.Constants.MAIN_DOOR_KEY_DESCRIPTION;
+import static stallgame.Constants.MAIN_DOOR_LOCK;
 
 public class GroceryStallTest {
 

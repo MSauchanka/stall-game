@@ -1,10 +1,11 @@
 package stallgame;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.apache.commons.math3.distribution.EnumeratedDistribution;
 import org.apache.commons.math3.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jetty.util.thread.ExecutorThreadPool;
 import stallgame.action.Actions;
 import stallgame.character.NonPlayableCharacter;
 import stallgame.character.PlayableCharacter;
@@ -14,14 +15,11 @@ import stallgame.item.product.ProductTypes;
 import stallgame.jetty.operator.ServerOperator;
 import stallgame.jetty.socket.ServerSocket;
 import stallgame.stall.CashierPlace;
-import stallgame.visual.MainWindow;
-import stallgame.visual.WorldStatusField;
 
-import javax.swing.*;
-import java.io.IOException;
-import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,9 +29,11 @@ import static stallgame.character.NonPlayableCharacter.MIN_AT_ROLE_TIME;
 
 public class GameServer {
 
-    public static final List<World> worlds = new LinkedList<>();
     public static final List<ServerSocket> serverSockets = new ArrayList<>();
-    public static final Map<ServerSocket, World> worldByServerSocket = new ConcurrentHashMap<>();
+    public static final List<World> worlds = new LinkedList<>();
+    // TODO: resolve strong dependency between world and socket
+    public static final Map<UUID, ServerSocket> serverSocketByUuid = new ConcurrentHashMap<>();
+    public static final Map<UUID, World> worldByUUID = new ConcurrentHashMap<>();
 
     private static final Logger LOGGER = LogManager.getLogger(GameServer.class.getName());
     private static final String port = null != System.getProperty("serverPort") ? System.getProperty("serverPort") : "9009";
@@ -46,7 +46,10 @@ public class GameServer {
             Thread.sleep(1000);
         }
         LOGGER.trace("Client connected!");
-
+        while (worlds.isEmpty()) {
+            Thread.sleep(1000);
+        }
+        LOGGER.trace("First world created!");
         executorService.execute(new WorldLoop());
     }
 
@@ -55,6 +58,7 @@ public class GameServer {
         Product product = new Product(ProductTypes.FOOD, Constants.MEAT_FOOD, 7, MEAT_FOOD_DESCRIPTION);
         IntStream.range(0, 50).forEach(idx -> world.groceryStall.loadProducts(singletonList(product)));
         IntStream.range(0, 50).forEach(idx -> world.addVisitor(new NonPlayableCharacter()));
+        world.wrappedNpcs = world.getVisitors().stream().map(PlayableCharacter::new).collect(Collectors.toSet());
 
         return world;
     }
@@ -91,6 +95,17 @@ public class GameServer {
                 LOGGER.error(e.getMessage());
             }
         });
+    }
+
+    public static String worldsUUIDsAsJson() {
+        JsonObject obj = new JsonObject();
+        JsonArray arr = new JsonArray();
+        worldByUUID.keySet().stream()
+                .map(UUID::toString)
+                .forEach(arr::add);
+        obj.add("worlds", arr);
+
+        return obj.toString();
     }
 
     private static List<Pair> createWeightPairs(PlayableCharacter wnpc) {

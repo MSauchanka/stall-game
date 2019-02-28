@@ -2,7 +2,7 @@ package stallgame.portal;
 
 public class PortalClosedException extends RuntimeException {
 
-    protected PortalClosedException() {
+    public PortalClosedException() {
         super("Closed! Sorry!");
     }
 }

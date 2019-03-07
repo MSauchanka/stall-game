@@ -49,14 +49,11 @@ public class ClientSocket {
 
     @OnWebSocketMessage
     public void onMessage(byte[] msg, int offset, int length) {
-        LOGGER.trace("Got message!");
         Object obj = SerializationUtils.deserialize(msg);
         if (obj instanceof World) {
-            LOGGER.trace("World instance message!");
             GameClient.worldServer = (World) obj;
         }
         if (obj instanceof String) {
-            LOGGER.trace("Text message: " + obj);
             JsonObject json = null;
 
             try {

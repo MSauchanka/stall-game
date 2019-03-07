@@ -9,6 +9,7 @@ public class WorldLoop implements Runnable {
 
     @Override
     public void run() {
+
         while (!GameServer.worldByUUID.isEmpty()) {
             try {
                 GameServer.worldByUUID.entrySet().forEach(entry -> {

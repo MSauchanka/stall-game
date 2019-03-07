@@ -10,14 +10,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.stream.IntStream;
+import java.util.LinkedList;
 
 public class WorldStatusField extends JPanel implements ActionListener {
 
     public static World world;
     public static java.util.List<String> worldsUUIDs;
 
-    private java.util.List<MainWindowButton> buttonList = new ArrayList<>();
+    private java.util.List<MainWindowButton> buttonList = new LinkedList<>();
+    private WorldsComboBox wcb = new WorldsComboBox();
 
     public WorldStatusField() {
         Timer timer = new Timer(250, this);
@@ -38,6 +39,9 @@ public class WorldStatusField extends JPanel implements ActionListener {
                 buttonList.forEach(super::remove);
                 buttonList.clear();
             }
+//            if (wcb.isDisplayable()) {
+//                super.remove(wcb);
+//            }
             g.drawString("NPC count: " + world.wrappedNpcs.size(), 5, 15);
             g.drawString(Role.VISITOR + " count : " + world.getAllNpcsStream()
                     .filter(npc -> Role.VISITOR.equals(npc.getRole()))
@@ -51,19 +55,19 @@ public class WorldStatusField extends JPanel implements ActionListener {
             g.drawString("Tics passed: " + world.tics, 5, 105);
         } else {
             if (worldsUUIDs != null) {
-                g.drawString("Create new world or choose existed one!", 5, 15);
+                g.drawString("Create new world or choose existing one!", 5, 15);
                 if (buttonList.isEmpty()) {
                     int startButtonY = 30;
                     MainWindowButton newWorldButton = new MainWindowButton("Create new World!", 5, startButtonY, 180, 30);
                     newWorldButton.addActionListener((actionEvent) -> GameClient.clientSocket.sendCreateNewWorldMsg());
                     buttonList.add(newWorldButton);
                     super.add(newWorldButton);
-                    // TODO: debug loop
-                    IntStream.range(0, worldsUUIDs.size()).forEach(idx -> {
-                        MainWindowButton uuidButton = new MainWindowButton(worldsUUIDs.get(idx), 5, startButtonY + (idx * 45), 180, 30);
-                        uuidButton.addActionListener((actionEvent) -> GameClient.clientSocket.sendGetWorldMsg(worldsUUIDs.get(idx)));
-                        buttonList.add(uuidButton);
-                        super.add(uuidButton);
+                    worldsUUIDs.forEach(id -> {
+                        MainWindowButton lastButton = buttonList.get(buttonList.size() - 1);
+                        MainWindowButton button = new MainWindowButton(id, 5, lastButton.getY() + 25, 180, 30);
+                        button.addActionListener((actionEvent) -> GameClient.clientSocket.sendGetWorldMsg(id));
+                        buttonList.add(button);
+                        super.add(button);
                     });
                 }
             } else {

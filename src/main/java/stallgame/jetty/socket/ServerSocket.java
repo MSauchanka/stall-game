@@ -79,10 +79,11 @@ public class ServerSocket {
                 }
 
                 if (json.has("getWorld")) {
-                    UUID uuid = UUID.fromString(json.get("get").getAsString());
+                    UUID uuid = UUID.fromString(json.get("getWorld").getAsString());
                     LOGGER.trace("Get World " + uuid.toString() + " has been received.");
                     if (GameServer.worldByUUID.containsKey(uuid)) {
                         sendWorldInstance(GameServer.worldByUUID.get(uuid));
+                        GameServer.serverSocketByUuid.put(uuid, this);
                     } else {
                         LOGGER.trace("World " + uuid.toString() + " was not found.");
                         sendNoWorldError(uuid);
@@ -93,7 +94,6 @@ public class ServerSocket {
     }
 
     public void sendWorldInstance(World world) {
-        LOGGER.trace("Sending worldLocal instance...");
         byte[] data = SerializationUtils.serialize(world);
         try {
             if (session.isOpen()) {
